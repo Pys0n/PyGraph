@@ -8,26 +8,41 @@ class TableValues:
 
 
     def set_header_row(self, header_row: list) -> None:
+        '''
+        Sets the header row of your TableValues
+        '''
         for i in range(len(header_row)):
             header_row[i] = [header_row[i], len(header_row[i])]
         self.header_row = header_row
 
 
     def set_first_column(self, first_column: list) -> None:
+        '''
+        Sets the first column of your TableValues
+        '''
         for i in range(len(first_column)):
             first_column[i] = [first_column[i], len(first_column[i])]
         self.first_column = first_column
 
     
     def set_text_at_cell(self, row: int, column: int, text: str) -> None:
+        '''
+        Changes the text of the cell at the position
+        '''
         self.values[(row, column)] = [text, len(text)]
 
 
     def get_text_from_cell(self, row: int, column: int) -> str:
+        '''
+        Returns the text of the cell at the position
+        '''
         return self.values[(row, column)][0]
     
 
     def get_textlength_from_cell(self, row: int, column: int) -> int:
+        '''
+        Returns the length of the cell at the position
+        '''
         return self.values[(row, column)][1]
 
 class Table:
@@ -79,30 +94,48 @@ class Table:
 
 
     def set_values(self, values: TableValues) -> None:
+        '''
+        Sets the Table values
+        '''
         self.values = values
 
 
     def set_cell_color(self, row, column, color: ColoredText) -> None:
+        '''
+        Sets the color of the cell at the position
+        '''
         self.values.values[(row, column)][0] = color + self.values.get_text_from_cell(row, column) + ColoredText.END
 
 
     def set_header_row_color(self, color: ColoredText) -> None:
+        '''
+        Sets the color of the header row
+        '''
         for i in range(len(self.values.header_row)):
             self.values.header_row[i][0] = color + self.values.header_row[i][0] + color
 
 
     def set_first_column_color(self, color: ColoredText) -> None:
+        '''
+        Sets the color of the first column
+        '''
         for i in range(len(self.values.first_column)):
             self.values.first_column[i][0] = color + self.values.first_column[i][0] + color
 
 
     def get_longest_row_length(self) -> int:
+        '''
+        Returns the length of the longest text in any cell
+        '''
         longest_row_length = 5
         for col_index in range(self.columns):
             for row_index in range(self.rows):
                 row_length = self.values.get_textlength_from_cell(row_index, col_index)
                 if row_length > longest_row_length:
                     longest_row_length = row_length
+        for item in self.values.header_row + self.values.first_column:
+            if item[1] > longest_row_length:
+                longest_row_length = item[1]
         return longest_row_length
 
 
