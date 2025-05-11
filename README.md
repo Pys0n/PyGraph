@@ -6,3 +6,13 @@
 ### TableValues()-class
 
 
+## BarChart()-class
+
+
+### Axis()-class
+
+
+### Position()-class
+
+
+### Direction()-class

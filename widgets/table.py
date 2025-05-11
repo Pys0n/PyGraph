@@ -1,4 +1,4 @@
-from text_widgets import *
+from widgets.text import *
 
 class TableValues:
     def __init__(self, header_row: list = [], first_column: list = []):
