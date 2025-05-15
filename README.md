@@ -6,6 +6,9 @@
 ### TableValues()-class
 
 
+### BorderStyle()-class
+
+
 ## BarChart()-class
 
 
