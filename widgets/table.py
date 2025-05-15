@@ -1,5 +1,23 @@
 from widgets.text import *
 
+
+class BorderStyle:
+    ASCII               = ("-", "|", "+", "+", "+", "+", "+", "+", "+", "+", "+")
+    BASIC               = ("—", "|", "+", "+", "+", "+", "+", "+", "+", "+", "+")
+    LIGHT               = ("─", "│", "┌", "┬", "┐", "├", "┼", "┤", "└", "┴", "┘")
+    HEAVY               = ("━", "┃", "┏", "┳", "┓", "┣", "╋", "┫", "┗", "┻", "┛")
+    DOUBLE              = ("═", "║", "╔", "╦", "╗", "╠", "╬", "╣", "╚", "╩", "╝")
+    LIGHT_ARC           = ("─", "│", "╭", "┬", "╮", "├", "┼", "┤", "╰", "┴", "╯")
+    LIGHT_DASHED        = ("╌", "┊", "┌", "┬", "┐", "├", "┼", "┤", "└", "┴", "┘")
+    HEAVY_DASHED        = ("╍", "┋", "┏", "┳", "┓", "┣", "╋", "┫", "┗", "┻", "┛")
+    HORIZONTAL_LIGHT    = ("─", " ", "─", "─", "─", "─", "─", "─", "─", "─", "─")
+    VERTICAL_LIGHT      = (" ", "│", "│", "│", "│", "│", "│", "│", "│", "│", "│")
+    HORIZONTAL_HEAVY    = ("━", " ", "━", "━", "━", "━", "━", "━", "━", "━", "━")
+    VERTICAL_HEAVY      = (" ", "┃", "┃", "┃", "┃", "┃", "┃", "┃", "┃", "┃", "┃")
+    NO_BORDER           = (" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ")
+
+
+
 class TableValues:
     def __init__(self, header_row: list = [], first_column: list = []):
         self.header_row: list[list[str, int]] = header_row
@@ -56,11 +74,12 @@ class Table:
     '''
 
 
-    def __init__(self, title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues()) -> None:
+    def __init__(self, title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues(), style: BorderStyle = BorderStyle.LIGHT) -> None:
         self.title: str = title
         self.columns: int = columns
         self.rows: int = rows
         self.values: TableValues = values
+        self.style: BorderStyle = style
 
 
     def set_title(self, title: str) -> None:
@@ -123,6 +142,13 @@ class Table:
             self.values.first_column[i][0] = color + self.values.first_column[i][0] + color
 
 
+    def set_border_style(self, style: BorderStyle) -> None:
+        '''
+        Sets the style of the border
+        '''
+        self.style = style
+
+
     def get_longest_row_length(self) -> int:
         '''
         Returns the length of the longest text in any cell
@@ -148,11 +174,11 @@ class Table:
 
         for print_row in range(self.rows*2+1):
             if print_row == 0:
-                print('┌' + ('─' * longest_row_length + '┬') * (self.columns-1) + '─' * longest_row_length + '┐')
+                print(self.style[2] + (self.style[0] * longest_row_length + self.style[3]) * (self.columns-1) + self.style[0] * longest_row_length + self.style[4])
             elif print_row == self.rows*2:
-                print('└' + ('─' * longest_row_length + '┴') * (self.columns-1) + '─' * longest_row_length + '┘')
+                print(self.style[8] + (self.style[0] * longest_row_length + self.style[9]) * (self.columns-1) + self.style[0] * longest_row_length + self.style[10])
             elif print_row % 2 == 0:
-                print('├' + ('─' * longest_row_length + '┼') * (self.columns-1) + '─' * longest_row_length + '┤')
+                print(self.style[5] + (self.style[0] * longest_row_length + self.style[6]) * (self.columns-1) + self.style[0] * longest_row_length + self.style[7])
             else:
                 for x in range(self.columns):
                     text = self.values.get_text_from_cell(print_row//2, x)
@@ -160,15 +186,15 @@ class Table:
                     while text_length < longest_row_length:
                         text = ' ' + text
                         text_length += 1
-                    print(f'│{text}', end='')
-                print('│')
+                    print(self.style[1] + text, end='')
+                print(self.style[1])
     
 
     def print(self) -> None:
         '''
         Prints your Table
         '''
-        
+        print(self.style)
         longest_row_length = self.get_longest_row_length()
 
 
@@ -179,22 +205,22 @@ class Table:
         
         print(FormatedText.BOLD + title.title() + FormatedText.BOLD, end='\n\n')
 
-        print('┌' + ('─' * longest_row_length + '┬') * (self.columns) + '─' * longest_row_length + '┐')
-        print(f'│' + ' ' * longest_row_length, end='')
+        print(self.style[2] + (self.style[0] * longest_row_length + self.style[3]) * (self.columns) + self.style[0] * longest_row_length + self.style[4])
+        print(self.style[1] + ' ' * longest_row_length, end='')
         for item in self.values.header_row:
             text = item[0]
             text_length = item[1]
             while text_length < longest_row_length:
                 text = ' ' + text
                 text_length += 1
-            print(f'│{FormatedText.BOLD + text + FormatedText.END}', end='')
-        print('│')
+            print(self.style[1] + FormatedText.BOLD + text + FormatedText.END, end='')
+        print(self.style[1])
 
         for print_row in range(self.rows*2+1):
             if print_row == self.rows*2:
-                print('└' + ('─' * longest_row_length + '┴') * (self.columns) + '─' * longest_row_length + '┘')
+                print(self.style[8] + (self.style[0] * longest_row_length + self.style[9]) * (self.columns) + self.style[0] * longest_row_length + self.style[10])
             elif print_row % 2 == 0:
-                print('├' + ('─' * longest_row_length + '┼') * (self.columns) + '─' * longest_row_length + '┤')
+                print(self.style[5] + (self.style[0] * longest_row_length + self.style[6]) * (self.columns) + self.style[0] * longest_row_length + self.style[7])
             else:
                 item = self.values.first_column[print_row//2]
                 text = item[0]
@@ -202,12 +228,12 @@ class Table:
                 while text_length < longest_row_length:
                     text = ' ' + text
                     text_length += 1
-                print(f'│{FormatedText.BOLD + text + FormatedText.END}', end='')
+                print(self.style[1] + FormatedText.BOLD + text + FormatedText.END, end='')
                 for x in range(self.columns):
                     text = self.values.get_text_from_cell(print_row//2, x)
                     text_length = self.values.get_textlength_from_cell(print_row//2, x)
                     while text_length < longest_row_length:
                         text = ' ' + text
                         text_length += 1
-                    print(f'│{text}', end='')
-                print('│')
+                    print(self.style[1] + text, end='')
+                print(self.style[1])

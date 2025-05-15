@@ -85,3 +85,14 @@ class BarChart:
         print('X:', self.xaxis.labels)
         print('Y:', self.yaxis.labels)
         print('Values:\n', self.values)
+
+        if self.direction == Direction.VERTICAL:
+            print('                 Diagramm              ')
+            print('      ^                                ')
+            print('T     │                                ')
+            print('E  DE ┼##################              ')
+            print('S     │                                ')
+            print('T  US ┼######                          ')
+            print('      │                                ')
+            print('      └─────+─────+─────+─────+─────>  ')
+            print('            1     2     3     4        ')
