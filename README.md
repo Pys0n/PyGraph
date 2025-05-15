@@ -21,4 +21,4 @@
 ### Direction()-class
 
 
-### Examples
+# Examples
