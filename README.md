@@ -19,3 +19,6 @@
 
 
 ### Direction()-class
+
+
+### Examples
