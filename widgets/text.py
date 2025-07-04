@@ -33,3 +33,16 @@ class FormatedText:
     BLINK     = '\33[5m'
     BLINK2    = '\33[6m'
     SELECTED  = '\33[7m'
+
+class TextAlign:
+    RIGHT     = 'right'
+    LEFT      = 'left'
+    CENTER    = 'center'
+
+    def set_text_align(text: str, space: int, align: str, fill_char: str = ' ') -> str:
+        if align == TextAlign.RIGHT:
+            return text.rjust(space, fill_char)
+        elif align == TextAlign.LEFT:
+            return text.ljust(space, fill_char)
+        elif align == TextAlign.CENTER:
+            return text.center(space, fill_char)
