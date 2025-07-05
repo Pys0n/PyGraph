@@ -51,13 +51,16 @@ class TableValues:
         self.first_column: list[list[str, int, TextAlign]] = first_column
         self.values: dict[tuple[int, int], list[str, int, TextAlign]] = {}
 
+        self.align = TextAlign.RIGHT
+        self.first_column_align = TextAlign.RIGHT
+        self.header_row_align = TextAlign.RIGHT
 
     def set_header_row(self, header_row: list) -> None:
         '''
         Sets the header row of your TableValues
         '''
         for i in range(len(header_row)):
-            header_row[i] = [header_row[i], len(header_row[i]), TextAlign.RIGHT]
+            header_row[i] = [header_row[i], len(header_row[i]), self.header_row_align]
         self.header_row = header_row
 
 
@@ -66,7 +69,7 @@ class TableValues:
         Sets the first column of your TableValues
         '''
         for i in range(len(first_column)):
-            first_column[i] = [first_column[i], len(first_column[i]), TextAlign.RIGHT]
+            first_column[i] = [first_column[i], len(first_column[i]), self.first_column_align]
         self.first_column = first_column
 
 
@@ -90,6 +93,8 @@ class TableValues:
         '''
         for i in range(len(self.first_column)):
             self.first_column[i][2] = align
+        
+        self.first_column_align = align
 
 
     def set_header_row_align(self, align: TextAlign) -> None:
@@ -98,13 +103,15 @@ class TableValues:
         '''
         for i in range(len(self.header_row)):
             self.header_row[i][2] = align
+        
+        self.header_row_align = align
 
     
     def set_text_at_cell(self, row: int, column: int, text: str) -> None:
         '''
         Changes the text of the cell at the position
         '''
-        self.values[(row, column)] = [text, len(text), TextAlign.RIGHT]
+        self.values[(row, column)] = [text, len(text), self.align]
 
     
     def set_align_at_cell(self, row: int, column: int, align: TextAlign) -> None:
@@ -121,6 +128,8 @@ class TableValues:
         for col_index in range(len(self.first_column)):
             for row_index in range(len(self.header_row)):
                 self.values[(row_index, col_index)][2] = align
+
+        self.align = align
 
 
     def get_text_from_cell(self, row: int, column: int) -> str:
@@ -337,6 +346,159 @@ class Table:
         return dict_of_content
 
 
+    def is_title_hidden(self) -> bool:
+        '''
+        Returns the state of `hide_title`
+        '''
+        return self.hide_title
+
+
+    def add_row(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Adds a new row to the end of the table
+        '''
+        if values == [' ']:
+            values *= self.columns
+        
+        elif len(values) != self.columns:
+            raise ValueError(f'Expected {self.columns} values, got {len(values)}')
+    
+        for column in range(self.columns):
+            self.values.values[(self.rows, column)] = [values[column], len(values[column]), self.values.align]
+        
+        self.rows += 1
+
+        self.values.first_column.append([first_column_value, len(first_column_value), self.values.first_column_align])
+
+
+    def insert_row(self, index: int = 0, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Inserts a new row at the index `index` of the table
+        '''
+        if values == [' ']:
+            values *= self.columns
+        
+        elif len(values) != self.columns:
+            raise ValueError(f'Expected {self.columns} values, got {len(values)}')
+    
+        new_values = {}
+        for key, value in self.values.values.items():
+            if key[0] >= index:
+                new_key = (key[0]+1, key[1])
+            else:
+                new_key = key
+            new_values[new_key] = value
+
+        for column in range(self.columns):
+            new_values[(index, column)] = [values[column], len(values[column]), self.values.align]
+        
+        self.rows += 1
+
+        self.values.first_column.insert(index, [first_column_value, len(first_column_value), self.values.first_column_align])
+        self.values.values = new_values
+
+
+    def delete_row(self, index: int) -> None:
+        '''
+        Deletes the row at the index `index` of the table
+        '''
+        new_values = {}
+        for key, value in self.values.values.items():
+            if key[0] > index:
+                new_key = (key[0]-1, key[1])
+            else:
+                new_key = key
+            new_values[new_key] = value
+        
+        self.rows -= 1
+
+        self.values.first_column.pop(index)
+        self.values.values = new_values
+
+
+    def swap_rows(self, index1: int, index2: int) -> None:
+        '''
+        Swap the rows at the index `index1` and at the index `index2` of the table
+        '''
+        for column_index in range(self.columns):
+            self.values.values[(index1, column_index)], self.values.values[(index2, column_index)] = self.values.values[(index2, column_index)], self.values.values[(index1, column_index)]
+        
+        self.values.first_column[index1], self.values.first_column[index2] = self.values.first_column[index2], self.values.first_column[index1]
+
+
+    def add_column(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Adds a new column to the end of the table
+        '''
+        if values == [' ']:
+            values *= self.rows
+        
+        elif len(values) != self.rows:
+            raise ValueError(f'Expected {self.rows} values, got {len(values)}')
+    
+        for row in range(self.rows):
+            self.values.values[(row, self.columns)] = [values[row], len(values[row]), self.values.align]
+        
+        self.columns += 1
+
+        self.values.header_row.append([first_column_value, len(first_column_value), self.values.first_column_align])
+
+
+    def insert_column(self, index: int = 0, header_row_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Inserts a new column at the index `index` of the table
+        '''
+        if values == [' ']:
+            values *= self.rows
+        
+        elif len(values) != self.rows:
+            raise ValueError(f'Expected {self.rows} values, got {len(values)}')
+    
+        new_values = {}
+        for key, value in self.values.values.items():
+            if key[1] >= index:
+                new_key = (key[0], key[1]+1)
+            else:
+                new_key = key
+            new_values[new_key] = value
+
+        for row in range(self.rows):
+            new_values[(row, index)] = [values[row], len(values[row]), self.values.align]
+        
+        self.columns += 1
+
+        self.values.header_row.insert(index, [header_row_value, len(header_row_value), self.values.first_column_align])
+        self.values.values = new_values
+
+
+    def delete_column(self, index: int) -> None:
+        '''
+        Deletes the column at the index `index` of the table
+        '''
+        new_values = {}
+        for key, value in self.values.values.items():
+            if key[1] > index:
+                new_key = (key[0], key[1]-1)
+            else:
+                new_key = key
+            new_values[new_key] = value
+        
+        self.columns -= 1
+
+        self.values.header_row.pop(index)
+        self.values.values = new_values
+
+
+    def swap_columns(self, index1: int, index2: int) -> None:
+        '''
+        Swap the columns at the index `index1` and at the index `index2` of the table
+        '''
+        for row_index in range(self.rows):
+            self.values.values[(row_index, index1)], self.values.values[(row_index, index2)] = self.values.values[(row_index, index2)], self.values.values[(row_index, index1)]
+        
+        self.values.header_row[index1], self.values.header_row[index2] = self.values.header_row[index2], self.values.header_row[index1]
+
+
     def create_from_dict(self, dict_of_content: dict) -> None:
         '''
         Creates the table from the data in the dict
@@ -358,16 +520,16 @@ class Table:
 
         header_row = []
         for item in list_of_content[1][1:]:
-            header_row.append([item, len(item), TextAlign.RIGHT])
+            header_row.append([item, len(item), self.values.header_row_align])
 
         first_column = []
         values = {}
         for row_index in range(2, len(list_of_content)):
-            first_column.append([list_of_content[row_index][0], len(list_of_content[row_index][0]), TextAlign.RIGHT])
+            first_column.append([list_of_content[row_index][0], len(list_of_content[row_index][0]), self.values.first_column_align])
 
             for column_index in range(1, len(list_of_content[row_index])):
                 text = list_of_content[row_index][column_index]
-                values[(row_index-2, column_index-1)] = [text, len(text), TextAlign.RIGHT]
+                values[(row_index-2, column_index-1)] = [text, len(text), self.values.align]
 
         tablevalues = TableValues(header_row=header_row,
                              first_column=first_column)
@@ -384,29 +546,22 @@ class Table:
 
         header_row = []
         for item in tuple_of_content[1][1:]:
-            header_row.append([item, len(item), TextAlign.RIGHT])
+            header_row.append([item, len(item), self.values.header_row_align])
 
         first_column = []
         values = {}
         for row_index in range(2, len(tuple_of_content)):
-            first_column.append([tuple_of_content[row_index][0], len(tuple_of_content[row_index][0]), TextAlign.RIGHT])
+            first_column.append([tuple_of_content[row_index][0], len(tuple_of_content[row_index][0]), self.values.first_column_align])
 
             for column_index in range(1, len(tuple_of_content[row_index])):
                 text = tuple_of_content[row_index][column_index]
-                values[(row_index-2, column_index-1)] = [text, len(text), TextAlign.RIGHT]
+                values[(row_index-2, column_index-1)] = [text, len(text), self.values.align]
 
         tablevalues = TableValues(header_row=header_row,
                              first_column=first_column)
         tablevalues.values = values
 
         self.set_values(tablevalues)
-
-
-    def is_title_hidden(self) -> bool:
-        '''
-        Returns the state of `hide_title`
-        '''
-        return self.hide_title
 
 
     def save_in_file(self, filename: str = 'Table') -> None:
