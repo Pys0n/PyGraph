@@ -499,6 +499,31 @@ class Table:
         self.values.header_row[index1], self.values.header_row[index2] = self.values.header_row[index2], self.values.header_row[index1]
 
 
+    def count(self, text: str, *, search_in_first_column: bool = False, search_in_header_row: bool = False) -> int:
+        '''
+        Counts how often the text appears in the table
+        '''
+        texts = []
+        for item in self.values.values.values():
+            texts.append(item[0])
+        
+        count = texts.count(text)
+
+        if search_in_first_column:
+            first_column_texts = []
+            for item in self.values.first_column:
+                first_column_texts.append(item[0])
+            count += first_column_texts.count(text)
+
+        if search_in_header_row:
+            header_row_texts = []
+            for item in self.values.header_row:
+                header_row_texts.append(item[0])
+            count += header_row_texts.count(text)
+
+        return count
+
+
     def create_from_dict(self, dict_of_content: dict) -> None:
         '''
         Creates the table from the data in the dict
