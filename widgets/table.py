@@ -745,6 +745,47 @@ class Table:
             for row in md_rows:
                 file.write('|' + '|'.join(row) + '|\n')
 
+
+    def convert_to_html(self, filename: str = 'Table') -> None:
+        '''
+        Saves the table as markdown table in `filename`.html
+        '''
+        html_header = [[' ', 'right']]
+        for item in self.values.header_row:
+            html_header.append([item[0], item[2]])
+
+        html_rows = []
+        for row in range(self.rows):
+            html_row = []
+            html_row.append([self.values.first_column[row][0], self.values.first_column[row][2]])
+            
+            for col in range(self.columns):
+                html_row.append([self.values.values[(row, col)][0], self.values.values[(row, col)][2]])
+            
+            html_rows.append(html_row)
+
+        if not pathlib.Path(f'{filename}.html').exists():
+            num = ''
+
+        else:
+            num = 1
+            while pathlib.Path(f'{filename}{num}.html').exists():
+                num += 1
+
+        with open(f'{filename}{num}.html', 'w', encoding='utf-8') as file:
+            file.write('<table>\n')
+            file.write('  <tr>\n')
+            for item in html_header:
+                file.write(f'    <td style="text-align: {item[1]}">{item[0]}</td>\n')
+            file.write('  </tr>\n')
+            for row in html_rows:
+                file.write('  <tr>\n')
+                for item in row:
+                    file.write(f'    <td style="text-align: {item[1]}">{item[0]}</td>\n')
+                file.write('  </tr>\n')
+            file.write('</table>\n')
+
+
     def save_in_file(self, filename: str = 'Table') -> None:
         '''
         Saves the table in the file .`filename`.table
