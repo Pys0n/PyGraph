@@ -228,6 +228,9 @@ class Table:
         if self.columns != len(values.header_row):
             self.columns = len(values.header_row)
 
+        self.sorted_row_indexes = [x for x in range(self.rows)]
+        self.sorted_column_indexes = [x for x in range(self.columns)]
+
 
     def set_default_cell_length(self, default_cell_length: int) -> None:
         '''
@@ -648,6 +651,56 @@ class Table:
         return count
 
 
+    def sort_by_row(self, row_index: int, reverse: bool = False) -> None:
+        '''
+        Sorts the table data by the row at the index `row_index`
+        '''
+        self.sorted_column_indexes = []
+
+        row_texts = []
+        row_items = []
+        for col_index in range(self.columns):
+            row_texts.append(self.values.values[(row_index, col_index)][0])
+            row_items.append([self.values.values[(row_index, col_index)][0], col_index])
+        
+        row_texts.sort(reverse=reverse)
+
+        for text in row_texts:
+            for item in row_items:
+                if text == item[0]:
+                    if item[1] not in self.sorted_column_indexes:
+                        self.sorted_column_indexes.append(item[1])
+                    else:
+                        while item[1] in self.sorted_column_indexes:
+                            item[1] += 1
+                        self.sorted_column_indexes.append(item[1])
+
+
+    def sort_by_column(self, column_index: int, reverse: bool = False) -> None:
+        '''
+        Sorts the table data by the col at the index `col_index`
+        '''
+        self.sorted_row_indexes = []
+
+        col_texts = []
+        col_items = []
+        for row_index in range(self.rows):
+            col_texts.append(self.values.values[(row_index, column_index)][0])
+            col_items.append([self.values.values[(row_index, column_index)][0], row_index])
+        
+        col_texts.sort(reverse=reverse)
+
+        for text in col_texts:
+            for item in col_items:
+                if text == item[0]:
+                    if item[1] not in self.sorted_row_indexes:
+                        self.sorted_row_indexes.append(item[1])
+                    else:
+                        while item[1] in self.sorted_row_indexes:
+                            item[1] += 1
+                        self.sorted_row_indexes.append(item[1])
+
+
     def create_from_dict(self, dict_of_content: dict) -> None:
         '''
         Creates the table from the data in the dict
@@ -857,10 +910,10 @@ class Table:
                 else:
                     table += ' ' * longest_row_length
 
-            for item in self.values.header_row:
-                if self.values.header_row.index(item) in self.hidden_columns:
+            for item_index in self.sorted_column_indexes:
+                if item_index in self.hidden_columns:
                     continue
-                text = TextAlign.set_text_align(item[0], longest_row_length, item[2])
+                text = TextAlign.set_text_align(self.values.header_row[item_index][0], longest_row_length, self.values.header_row[item_index][2])
                 if self.style != TableStyle.ONLY_BORDER:
                     table += self.borderstyle[1] + FormatedText.BOLD + text + FormatedText.END
                 else:
@@ -871,7 +924,13 @@ class Table:
             else:
                 table += '\n'
 
-        for print_row in range(self.rows*2+1):
+        print_rows = []
+        for index in self.sorted_row_indexes:
+            print_rows.append(2)
+            print_rows.append(index*2+1)
+        print_rows.append(self.rows*2)
+
+        for print_row in print_rows:
             if print_row == self.rows*2:    # lowest border piece/ outer border
                 if self.style != TableStyle.WITHOUT_BORDER:
                     if self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
@@ -909,7 +968,7 @@ class Table:
                         table += FormatedText.BOLD + text + FormatedText.END
                     
 
-                for x in range(self.columns):
+                for x in self.sorted_column_indexes:
                     if print_row//2 not in self.hidden_rows and x not in self.hidden_columns:
                         text = self.values.get_text_from_cell(print_row//2, x)
                         text = TextAlign.set_text_align(text, longest_row_length, self.values.get_align_from_cell(print_row//2, x))
