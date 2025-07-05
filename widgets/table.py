@@ -1,5 +1,5 @@
 from widgets.text import *
-import pathlib
+import pathlib, os
 
 
 class BorderStyle:
@@ -54,6 +54,14 @@ class TableValues:
         self.align = TextAlign.RIGHT
         self.first_column_align = TextAlign.RIGHT
         self.header_row_align = TextAlign.RIGHT
+
+    
+    def help(self) -> None:
+        '''
+        Prints an overview of all methods in the terminal
+        '''
+        print(os.system('python3 -c "from widgets.table import TableValues; help(TableValues)"'))
+
 
     def set_header_row(self, header_row: list) -> None:
         '''
@@ -166,11 +174,6 @@ class TableValues:
 class Table:
     '''
     Creates a new Table object.
-
-    Parameters:
-        - `title`  str, the title of your table
-        - `columns`  int, the amount of columns of your table
-        - `rows`  int, the amount of rows of your table
     '''
 
 
@@ -187,12 +190,16 @@ class Table:
         self.hidden_columns: list[tuple[int, int]] = []
 
 
+    def help(self) -> None:
+        '''
+        Prints an overview of all methods in the terminal
+        '''
+        print(os.system('python3 -c "from widgets.table import Table; help(Table)"'))
+
+
     def set_title(self, title: str) -> None:
         '''
         Sets the title of your Table
-
-        Parameters:
-            - `title`  str, the title of your table
         '''
         self.title = title
 
@@ -200,9 +207,6 @@ class Table:
     def set_columns(self, columns: int) -> None:
         '''
         Sets the amount of columns of your Table
-
-        Parameters:
-            - `columns`  int, the amount of columns of your table
         '''
         self.columns = columns
 
@@ -210,9 +214,6 @@ class Table:
     def set_rows(self, rows: int) -> None:
         '''
         Sets the amount of rows of your Table
-
-        Parameters:
-            - `rows`  int, the amount of rows of your table
         '''
         self.rows = rows
 
