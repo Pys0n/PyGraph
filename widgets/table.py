@@ -1,5 +1,5 @@
 from widgets.text import *
-import pathlib, os
+import pathlib, os, copy
 
 
 class BorderStyle:
@@ -171,6 +171,105 @@ class TableValues:
         return self.values[(row, column)][2]
     
 
+    def get_text_from_row(self, row: int) -> list[str, list[str]]:
+        '''
+        Returns the text of the first column and all texts of the row as list
+        '''
+        texts = []
+
+        for col in range(len(self.header_row)):
+            texts.append(self.values[(row, col)][0])
+
+        return [self.first_column[row][0], texts]
+    
+
+    def get_text_from_column(self, column: int) -> list[str, list[str]]:
+        '''
+        Returns the text of the header row and all texts of the column as list
+        '''
+        texts = []
+        
+        for row in range(len(self.first_column)):
+            texts.append(self.values[(row, column)][0])
+
+        return [self.header_row[column][0], texts]
+    
+
+    def is_numeric_row(self, row: int) -> bool:
+        '''
+        Returns `True` if the row only includ intergers and floats
+        '''
+        for col in range(len(self.header_row)):
+            if self.values[(row, col)][0].count('.') > 1:
+                return False
+            elif self.values[(row, col)][0].count('.') == 1 and len(self.values[(row, col)][0]) == 1:
+                return False
+            for letter in self.values[(row, col)][0].strip():
+                if letter not in '1234567890.':
+                    return False
+        return True
+
+
+    def is_numeric_column(self, column: int) -> bool:
+        '''
+        Returns `True` if the column only includ intergers and floats
+        '''
+        for row in range(len(self.first_column)):
+            if self.values[(row, column)][0].count('.') > 1:
+                return False
+            elif self.values[(row, column)][0].count('.') == 1 and len(self.values[(row, column)][0]) == 1:
+                return False
+            for letter in self.values[(row, column)][0].strip():
+                if letter not in '1234567890.':
+                    return False
+        return True
+    
+
+    def sum_row(self, row: int) -> float:
+        '''
+        Sums all values is this row
+        The row must be numeric (`is_numeric_row()`)
+        '''
+        if not self.is_numeric_row(row):
+            raise ValueError(f'The row {row} is not numeric ( check with is_numeric_row() )')
+        
+        sum = 0
+        for col in range(len(self.header_row)):
+            sum += float(self.values[(row, col)][0])
+
+        return sum
+
+
+    def sum_column(self, column: int) -> float:
+        '''
+        Sums all values is this column
+        The column must be numeric (`is_numeric_column()`)
+        '''
+        if not self.is_numeric_column(column):
+            raise ValueError(f'The column {column} is not numeric ( check with is_numeric_column() )')
+        
+        sum = 0
+        for row in range(len(self.first_column)):
+            sum += float(self.values[(row, column)][0])
+
+        return sum
+
+
+    def copy(self) -> any:
+        '''
+        Creates a copy of this object and returns it
+        '''
+        new_table_values = TableValues(first_column=copy.deepcopy(self.first_column), header_row=copy.deepcopy(self.header_row))
+
+        new_table_values.values = copy.deepcopy(self.values)
+        new_table_values.align = self.align
+        new_table_values.first_column_align = self.first_column_align
+        new_table_values.header_row_align = self.header_row_align
+
+        return new_table_values
+
+
+
 class Table:
     '''
     Creates a new Table object.
@@ -188,6 +287,8 @@ class Table:
         self.hide_title: bool = hide_title
         self.hidden_rows: list[tuple[int, int]] = []
         self.hidden_columns: list[tuple[int, int]] = []
+        self.has_sum_row: bool = False
+        self.sum_row_rows: list = []
 
 
     def help(self) -> None:
@@ -985,3 +1086,19 @@ class Table:
                     table += '\n'
 
         return table
+    
+
+    def copy(self) -> any:
+        '''
+        Creates a copy of the table and returns it
+        '''
+        new_table = Table(title=self.title, columns=self.columns, rows=self.rows,
+                          values=copy.deepcopy(self.values), style=self.style,
+                          borderstyle=self.borderstyle, default_cell_length=self.default_cell_length,
+                          hide_title=self.hide_title)
+        new_table.hidden_rows = copy.deepcopy(self.hidden_rows)
+        new_table.hidden_columns = copy.deepcopy(self.hidden_columns)
+        new_table.has_sum_row = self.has_sum_row
+        new_table.sum_row_rows = copy.deepcopy(self.sum_row_rows)
+
+        return new_table
