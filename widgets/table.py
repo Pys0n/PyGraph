@@ -287,8 +287,10 @@ class Table:
         self.hide_title: bool = hide_title
         self.hidden_rows: list[tuple[int, int]] = []
         self.hidden_columns: list[tuple[int, int]] = []
-        self.has_sum_row: bool = False
-        self.sum_row_rows: list = []
+        self.sum_row: bool = False
+        self.sum_row_columns: list = []
+        self.sorted_row_indexes: list[int] = [x for x in range(self.rows)]
+        self.sorted_column_indexes: list[int] = [x for x in range(self.columns)]
 
 
     def help(self) -> None:
@@ -445,6 +447,26 @@ class Table:
             if index in self.hide_columns:
                 self.hidden_columns.remove(index)
 
+    
+    def show_sum_row(self, columns: list) -> None:
+        '''
+        Adds a row with the sums of the columns in `columns` to the end of the table
+        '''
+        self.sum_row = True
+
+        for col in columns:
+            if not self.values.is_numeric_column(col):
+                raise ValueError(f'The column {col} is not a numeric column ( check with is_numeric_column() )')
+        
+        self.sum_row_columns = columns
+
+
+    def hide_sum_row(self) -> None:
+        '''
+        Removes the row with the sums of the columns in `columns` at the end of the table
+        '''
+        self.sum_row = False
+
 
     def get_values(self) -> TableValues:
         '''
@@ -579,6 +601,13 @@ class Table:
         Returns True if the column at the index `column_index` is hidden
         '''
         return column_index in self.hidden_columns
+    
+
+    def is_sum_row_hidden(self) -> bool:
+        '''
+        Returns True if the sum row is hidden
+        '''
+        return not self.sum_row
     
 
     def add_row(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
@@ -1032,7 +1061,52 @@ class Table:
         print_rows.append(self.rows*2)
 
         for print_row in print_rows:
-            if print_row == self.rows*2:    # lowest border piece/ outer border
+            if print_row == self.rows*2:    # lowest border piece/ outer border (and sum row)
+                
+                if self.sum_row:
+                    if self.style in [TableStyle.WITHOUT_HEADER_ROW, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
+                        if print_row != 0:
+                            if self.style == TableStyle.ONLY_BORDER:
+                                table += self.borderstyle[1] + (' ' * (longest_row_length + 1)) * (self.columns-len(self.hidden_columns)) + ' ' * longest_row_length + self.borderstyle[1] + '\n'
+                            elif self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
+                                table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
+                            else:
+                                table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-1-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
+                    else:
+                        if self.style == TableStyle.ONLY_BORDER:
+                            table += self.borderstyle[1] + (' ' * (longest_row_length + 1)) * (self.columns-len(self.hidden_columns)) + ' ' * longest_row_length + self.borderstyle[1] + ' \n'
+                        elif self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
+                            table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
+                        else:
+                            table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-1-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
+
+                    if self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN] and print_row//2 not in self.hidden_rows:
+                        if self.style != TableStyle.WITHOUT_BORDER:
+                            table += self.borderstyle[1] + FormatedText.BOLD + 'SUM'.center(longest_row_length) + FormatedText.END
+                        else:
+                            table += FormatedText.BOLD + 'SUM'.center(longest_row_length) + FormatedText.END
+                        
+
+                    for x in self.sorted_column_indexes:
+                        if x in self.sum_row_columns:
+                            if self.style != TableStyle.ONLY_BORDER:
+                                table += self.borderstyle[1] + str(self.values.sum_column(x)).center(longest_row_length)
+                            else:
+                                table += ' ' + str(self.values.sum_column(x)).center(longest_row_length)
+                        else:
+                            if self.style != TableStyle.ONLY_BORDER:
+                                table += self.borderstyle[1] + ' '.center(longest_row_length)
+                            else:
+                                table += ' '.center(longest_row_length)
+
+                    if print_row//2 in self.hidden_rows:
+                        pass
+                    elif self.style != TableStyle.WITHOUT_BORDER:
+                        table += self.borderstyle[1] + '\n'
+                    else:
+                        table += '\n'
+
+
                 if self.style != TableStyle.WITHOUT_BORDER:
                     if self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
                         if self.style == TableStyle.ONLY_BORDER:
@@ -1041,9 +1115,11 @@ class Table:
                             table += self.borderstyle[8] + (self.borderstyle[0] * longest_row_length + self.borderstyle[9]) * (self.columns-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + self.borderstyle[10] + '\n'
                     else:
                         table += self.borderstyle[8] + (self.borderstyle[0] * longest_row_length + self.borderstyle[9]) * (self.columns-1-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + self.borderstyle[10] + '\n'
+            
             elif print_row % 2 == 0:        # border between cells
                 if int(print_row / 2) in self.hidden_rows:
                     continue
+                
                 if self.style in [TableStyle.WITHOUT_HEADER_ROW, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
                     if print_row != 0:
                         if self.style == TableStyle.ONLY_BORDER:
@@ -1059,6 +1135,7 @@ class Table:
                         table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
                     else:
                         table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-1-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
+            
             else:                           # cell texts
                 if self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN] and print_row//2 not in self.hidden_rows:
                     item = self.values.first_column[print_row//2]
@@ -1098,7 +1175,7 @@ class Table:
                           hide_title=self.hide_title)
         new_table.hidden_rows = copy.deepcopy(self.hidden_rows)
         new_table.hidden_columns = copy.deepcopy(self.hidden_columns)
-        new_table.has_sum_row = self.has_sum_row
-        new_table.sum_row_rows = copy.deepcopy(self.sum_row_rows)
+        new_table.sum_row = self.sum_row
+        new_table.sum_row_columns = copy.deepcopy(self.sum_row_columns)
 
         return new_table
