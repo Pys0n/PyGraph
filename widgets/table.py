@@ -225,6 +225,165 @@ class TableValues:
         return True
     
 
+    def add_row(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Adds a new row to the end of the table
+        '''
+        if values == [' ']:
+            values *= len(self.header_row)
+        
+        elif len(values) != len(self.header_row):
+            raise ValueError(f'Expected {len(self.header_row)} values, got {len(values)}')
+    
+        for column in range(len(self.header_row)):
+            self.values[(len(self.first_column), column)] = [values[column], len(values[column]), self.align]
+        
+        self.first_column.append([first_column_value, len(first_column_value), self.first_column_align])
+
+
+    def insert_row(self, index: int = 0, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Inserts a new row at the index `index` of the table
+        '''
+        if values == [' ']:
+            values *= len(self.header_row)
+        
+        elif len(values) != len(self.header_row):
+            raise ValueError(f'Expected {len(self.header_row)} values, got {len(values)}')
+    
+        new_values = {}
+        for key, value in self.values.items():
+            if key[0] >= index:
+                new_key = (key[0]+1, key[1])
+            else:
+                new_key = key
+            new_values[new_key] = value
+
+        for column in range(len(self.header_row)):
+            new_values[(index, column)] = [values[column], len(values[column]), self.align]
+        
+        self.first_column.insert(index, [first_column_value, len(first_column_value), self.first_column_align])
+        self.values = new_values
+
+
+    def delete_row(self, index: int) -> None:
+        '''
+        Deletes the row at the index `index` of the table
+        '''
+        new_values = {}
+        for key, value in self.values.items():
+            if key[0] > index:
+                new_key = (key[0]-1, key[1])
+            else:
+                new_key = key
+            new_values[new_key] = value
+        
+        self.first_column.pop(index)
+        self.values = new_values
+
+
+    def swap_rows(self, index1: int, index2: int) -> None:
+        '''
+        Swap the rows at the index `index1` and at the index `index2` of the table
+        '''
+        for column_index in range(len(self.header_row)):
+            self.values[(index1, column_index)], self.values[(index2, column_index)] = self.values[(index2, column_index)], self.values[(index1, column_index)]
+        
+        self.first_column[index1], self.first_column[index2] = self.first_column[index2], self.first_column[index1]
+
+
+    def add_column(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Adds a new column to the end of the table
+        '''
+        if values == [' ']:
+            values *= len(self.first_column)
+        
+        elif len(values) != len(self.first_column):
+            raise ValueError(f'Expected {len(self.first_column)} values, got {len(values)}')
+    
+        for row in range(len(self.first_column)):
+            self.values[(row, len(self.header_row))] = [values[row], len(values[row]), self.align]
+        
+        self.header_row.append([first_column_value, len(first_column_value), self.first_column_align])
+
+
+    def insert_column(self, index: int = 0, header_row_value: str = ' ', values: list[str] = [' ']) -> None:
+        '''
+        Inserts a new column at the index `index` of the table
+        '''
+        if values == [' ']:
+            values *= len(self.first_column)
+        
+        elif len(values) != len(self.first_column):
+            raise ValueError(f'Expected {len(self.first_column)} values, got {len(values)}')
+    
+        new_values = {}
+        for key, value in self.values.items():
+            if key[1] >= index:
+                new_key = (key[0], key[1]+1)
+            else:
+                new_key = key
+            new_values[new_key] = value
+
+        for row in range(len(self.first_column)):
+            new_values[(row, index)] = [values[row], len(values[row]), self.align]
+        
+        self.header_row.insert(index, [header_row_value, len(header_row_value), self.first_column_align])
+        self.values = new_values
+
+
+    def delete_column(self, index: int) -> None:
+        '''
+        Deletes the column at the index `index` of the table
+        '''
+        new_values = {}
+        for key, value in self.values.items():
+            if key[1] > index:
+                new_key = (key[0], key[1]-1)
+            else:
+                new_key = key
+            new_values[new_key] = value
+        
+        self.header_row.pop(index)
+        self.values = new_values
+
+
+    def swap_columns(self, index1: int, index2: int) -> None:
+        '''
+        Swap the columns at the index `index1` and at the index `index2` of the table
+        '''
+        for row_index in range(len(self.first_column)):
+            self.values[(row_index, index1)], self.values[(row_index, index2)] = self.values[(row_index, index2)], self.values[(row_index, index1)]
+        
+        self.header_row[index1], self.header_row[index2] = self.header_row[index2], self.header_row[index1]
+
+
+    def count(self, text: str, *, search_in_first_column: bool = False, search_in_header_row: bool = False) -> int:
+        '''
+        Counts how often the text appears in the table
+        '''
+        texts = []
+        for item in self.values.values():
+            texts.append(item[0])
+        
+        count = texts.count(text)
+
+        if search_in_first_column:
+            first_column_texts = []
+            for item in self.first_column:
+                first_column_texts.append(item[0])
+            count += first_column_texts.count(text)
+
+        if search_in_header_row:
+            header_row_texts = []
+            for item in self.header_row:
+                header_row_texts.append(item[0])
+            count += header_row_texts.count(text)
+
+        return count
+
+
     def sum_row(self, row: int) -> float:
         '''
         Sums all values is this row
@@ -608,177 +767,6 @@ class Table:
         Returns True if the sum row is hidden
         '''
         return not self.sum_row
-    
-
-    def add_row(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
-        '''
-        Adds a new row to the end of the table
-        '''
-        if values == [' ']:
-            values *= self.columns
-        
-        elif len(values) != self.columns:
-            raise ValueError(f'Expected {self.columns} values, got {len(values)}')
-    
-        for column in range(self.columns):
-            self.values.values[(self.rows, column)] = [values[column], len(values[column]), self.values.align]
-        
-        self.rows += 1
-
-        self.values.first_column.append([first_column_value, len(first_column_value), self.values.first_column_align])
-
-
-    def insert_row(self, index: int = 0, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
-        '''
-        Inserts a new row at the index `index` of the table
-        '''
-        if values == [' ']:
-            values *= self.columns
-        
-        elif len(values) != self.columns:
-            raise ValueError(f'Expected {self.columns} values, got {len(values)}')
-    
-        new_values = {}
-        for key, value in self.values.values.items():
-            if key[0] >= index:
-                new_key = (key[0]+1, key[1])
-            else:
-                new_key = key
-            new_values[new_key] = value
-
-        for column in range(self.columns):
-            new_values[(index, column)] = [values[column], len(values[column]), self.values.align]
-        
-        self.rows += 1
-
-        self.values.first_column.insert(index, [first_column_value, len(first_column_value), self.values.first_column_align])
-        self.values.values = new_values
-
-
-    def delete_row(self, index: int) -> None:
-        '''
-        Deletes the row at the index `index` of the table
-        '''
-        new_values = {}
-        for key, value in self.values.values.items():
-            if key[0] > index:
-                new_key = (key[0]-1, key[1])
-            else:
-                new_key = key
-            new_values[new_key] = value
-        
-        self.rows -= 1
-
-        self.values.first_column.pop(index)
-        self.values.values = new_values
-
-
-    def swap_rows(self, index1: int, index2: int) -> None:
-        '''
-        Swap the rows at the index `index1` and at the index `index2` of the table
-        '''
-        for column_index in range(self.columns):
-            self.values.values[(index1, column_index)], self.values.values[(index2, column_index)] = self.values.values[(index2, column_index)], self.values.values[(index1, column_index)]
-        
-        self.values.first_column[index1], self.values.first_column[index2] = self.values.first_column[index2], self.values.first_column[index1]
-
-
-    def add_column(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
-        '''
-        Adds a new column to the end of the table
-        '''
-        if values == [' ']:
-            values *= self.rows
-        
-        elif len(values) != self.rows:
-            raise ValueError(f'Expected {self.rows} values, got {len(values)}')
-    
-        for row in range(self.rows):
-            self.values.values[(row, self.columns)] = [values[row], len(values[row]), self.values.align]
-        
-        self.columns += 1
-
-        self.values.header_row.append([first_column_value, len(first_column_value), self.values.first_column_align])
-
-
-    def insert_column(self, index: int = 0, header_row_value: str = ' ', values: list[str] = [' ']) -> None:
-        '''
-        Inserts a new column at the index `index` of the table
-        '''
-        if values == [' ']:
-            values *= self.rows
-        
-        elif len(values) != self.rows:
-            raise ValueError(f'Expected {self.rows} values, got {len(values)}')
-    
-        new_values = {}
-        for key, value in self.values.values.items():
-            if key[1] >= index:
-                new_key = (key[0], key[1]+1)
-            else:
-                new_key = key
-            new_values[new_key] = value
-
-        for row in range(self.rows):
-            new_values[(row, index)] = [values[row], len(values[row]), self.values.align]
-        
-        self.columns += 1
-
-        self.values.header_row.insert(index, [header_row_value, len(header_row_value), self.values.first_column_align])
-        self.values.values = new_values
-
-
-    def delete_column(self, index: int) -> None:
-        '''
-        Deletes the column at the index `index` of the table
-        '''
-        new_values = {}
-        for key, value in self.values.values.items():
-            if key[1] > index:
-                new_key = (key[0], key[1]-1)
-            else:
-                new_key = key
-            new_values[new_key] = value
-        
-        self.columns -= 1
-
-        self.values.header_row.pop(index)
-        self.values.values = new_values
-
-
-    def swap_columns(self, index1: int, index2: int) -> None:
-        '''
-        Swap the columns at the index `index1` and at the index `index2` of the table
-        '''
-        for row_index in range(self.rows):
-            self.values.values[(row_index, index1)], self.values.values[(row_index, index2)] = self.values.values[(row_index, index2)], self.values.values[(row_index, index1)]
-        
-        self.values.header_row[index1], self.values.header_row[index2] = self.values.header_row[index2], self.values.header_row[index1]
-
-
-    def count(self, text: str, *, search_in_first_column: bool = False, search_in_header_row: bool = False) -> int:
-        '''
-        Counts how often the text appears in the table
-        '''
-        texts = []
-        for item in self.values.values.values():
-            texts.append(item[0])
-        
-        count = texts.count(text)
-
-        if search_in_first_column:
-            first_column_texts = []
-            for item in self.values.first_column:
-                first_column_texts.append(item[0])
-            count += first_column_texts.count(text)
-
-        if search_in_header_row:
-            header_row_texts = []
-            for item in self.values.header_row:
-                header_row_texts.append(item[0])
-            count += header_row_texts.count(text)
-
-        return count
 
 
     def sort_by_row(self, row_index: int, reverse: bool = False) -> None:
@@ -1056,7 +1044,7 @@ class Table:
 
         print_rows = []
         for index in self.sorted_row_indexes:
-            print_rows.append(2)
+            print_rows.append(0)
             print_rows.append(index*2+1)
         print_rows.append(self.rows*2)
 
