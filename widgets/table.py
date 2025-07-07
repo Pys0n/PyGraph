@@ -501,7 +501,7 @@ class Table:
         self.default_cell_length = default_cell_length
 
 
-    def set_cell_color(self, row, column, color: ColoredText) -> None:
+    def set_cell_color(self, row: int, column: int, color: ColoredText) -> None:
         '''
         Sets the color of the cell at the position
         '''
@@ -648,7 +648,7 @@ class Table:
         return self.hidden_columns
     
 
-    def get_longest_row_length(self) -> int:
+    def get_longest_cell_length(self) -> int:
         '''
         Returns the length of the longest text in any cell
         '''
@@ -686,7 +686,7 @@ class Table:
         for i in range(len(self.values.first_column)):
             line = [self.values.first_column[i][0]]
             for x in range(len(self.values.header_row)):
-                line.append(self.values.values[(x, i)][0])
+                line.append(self.values.values[(i, x)][0])
 
             list_of_content.append(line)
 
@@ -708,7 +708,7 @@ class Table:
         for i in range(len(self.values.first_column)):
             line = [self.values.first_column[i][0]]
             for x in range(len(self.values.header_row)):
-                line.append(self.values.values[(x, i)][0])
+                line.append(self.values.values[(i, x)][0])
 
             tuple_of_content.append(tuple(line))
 
@@ -732,20 +732,6 @@ class Table:
         Returns the state of `hide_title`
         '''
         return self.hide_title
-
-
-    def is_hide_hidden_rows(self) -> bool:
-        '''
-        Returns the state of `hide_hidden_rows`
-        '''
-        return self.hide_hidden_rows
-
-
-    def is_hide_hidden_columns(self) -> bool:
-        '''
-        Returns the state of `hide_hidden_columns`
-        '''
-        return self.hide_hidden_columns
     
 
     def is_row_hidden(self, row_index: int) -> bool:
@@ -1003,7 +989,7 @@ class Table:
 
         table = ''
 
-        longest_row_length = self.get_longest_row_length()
+        longest_row_length = self.get_longest_cell_length()
 
         if not self.hide_title:
             title_length = longest_row_length * (self.rows+1) + self.rows+2
