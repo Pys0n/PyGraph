@@ -292,7 +292,7 @@ class TableValues:
         self.first_column[index1], self.first_column[index2] = self.first_column[index2], self.first_column[index1]
 
 
-    def add_column(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None:
+    def add_column(self, header_row_value: str = ' ', values: list[str] = [' ']) -> None:
         '''
         Adds a new column to the end of the table
         '''
@@ -305,7 +305,7 @@ class TableValues:
         for row in range(len(self.first_column)):
             self.values[(row, len(self.header_row))] = [values[row], len(values[row]), self.align]
         
-        self.header_row.append([first_column_value, len(first_column_value), self.first_column_align])
+        self.header_row.append([header_row_value, len(header_row_value), self.first_column_align])
 
 
     def insert_column(self, index: int = 0, header_row_value: str = ' ', values: list[str] = [' ']) -> None:

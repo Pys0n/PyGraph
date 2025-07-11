@@ -35,7 +35,7 @@ Converts your table into an markdown table and saves it in `filename`.md. You ca
 Only the text get converted. Styles and other things are ignored.
 
 ### .copy() -> Table
-Creates a copy of the Table and everything saved in the table.
+Creates a copy of the `Table()`-object and everything saved in the `Table()`-object.
 
 
 ### create_from_dict(dict_of_content: dict) -> None
@@ -328,32 +328,45 @@ Sorts all columns by the values in the column at the index `column_index`. The c
 Sorts all rows by the values in the row at the index `row_index`. The row is sorted by ascii, this means that the letters from A-Z are smaller than the letters from a-z. You can reverse the sorting if you set `reverse` to `True`. `reverse` is by default `False`.
 
 ## TableValues()-class
+The `TableValues()`-class contains the values of the table. You can set the values of the table to a `TableValues()`-object with `your_table.set_values(your_table_values)`.
 
-### .add_column(first_column_value: str = ' ', values: list = [' ']) -> None
+The `TableValues()`-class takes two arguments. At first `header_row` as list of strings. In this list are all header row texts, but you can add more later. After that it takes `first_column` as list of strings. In this list are all first column texts, but you can add more later.
 
 
-### .add_row(header_row_value: str = ' ', values: list = [' ']) -> None
+### .add_column(header_row_value: str = ' ', values: list = [' ']) -> None
+Adds a column to the end of the table. The text in the cell of the header row is set to the value of `header_row_value`. The texts of the cells in this column are set to the values in `values` from top to bottom. By default `header_row_value` is set to " " and values is a list of " ", which is multiplied with the number of first column items.
+
+
+### .add_row(first_column_value: str = ' ', values: list = [' ']) -> None
+Adds a row to the end of the table. The text in the cell of the first column is set to the value of `first_column_value`. The texts of the cells in this row are set to the values in `values` from left to right. By default `first_column_value` is set to " " and values is a list of " ", which is multiplied with the number of header row items.
 
 
 ### .copy() -> TableValues
+Creates a copy of the `TableValues()`-object and everything saved in the `TableValues()`-object.
 
 
 ### .count(text: str, *, search_in_first_column: str = False, search_in_header_row: str = False) -> int
+Counts how often the text in `text` appears in the table. If `search_in_first_column` is `True` than it searches the text also in the first column. If `search_in_header_row` is `True` than it searches the text also in the header row. By default `search_in_first_column` and `search_in_header_row` are set to False.
 
 
 ### .delete_column(index: int) -> None
+Deletes the column at the index `index`.
 
 
 ### .delete_row(index: int) -> None
+Deletes the row at the index `index`.
 
 
 ### .get_align_from_cell(row: int, column: int) -> TextAlign
+Returns the text align of the cell at the position (`row`, `column`).
 
 
 ### .get_cell_with_text(text: str) -> tuple
+Returns a tuple with the position of the first cell with the text `text`. The tuple has the format (row, column).
 
 
 ### .get_text_from_cell(row: int, column: int) -> str
+Returns the text from the cell at the position (`row`, `column`).
 
 
 ### .get_text_from_column(column: int) -> list
