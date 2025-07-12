@@ -1,5 +1,7 @@
 # How to use PyGraph
 
+# Create Tables with PyGraph
+
 ## Table()-class
 You can use the `Table()`-class to create tables in different designs and with a lot of features. They make it easier to add some cool stuff to your table.
 
@@ -370,77 +372,340 @@ Returns the text from the cell at the position (`row`, `column`).
 
 
 ### .get_text_from_column(column: int) -> list
+Returns the text of the header row cell and the texts of the cells in this column. The list could look like this: `['header row text', ['cell 1', 'cell 2', 'cell 3']]`. 
 
 
 ### .get_text_from_row(row: int) -> list
+Returns the text of the first column cell and the texts of the cells in this row. The list could look like this: `['first column text', ['cell 1', 'cell 2', 'cell 3']]`. 
 
 
 ### .get_textlength_from_cell(row: int, column: int) -> int
+Returns the length of the text of the cell at the position (`row`, `column`).
 
 
 ### .help() -> None
+The `.help()`-function runs the python command `help(TableValues)` and shows the output in your terminal. In Linux you can leave this with ctrl-Z.
+
+```
+Help on class TableValues in module widgets.table:
+
+class TableValues(builtins.object)
+ |  TableValues(header_row: list = [], first_column: list = [])
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, header_row: list = [], first_column: list = [])
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  add_column(self, header_row_value: str = ' ', values: list[str] = [' ']) -> None
+ |      Adds a new column to the end of the table
+ |
+ |  add_row(self, first_column_value: str = ' ', values: list[str] = [' ']) -> None
+ |      Adds a new row to the end of the table
+ |
+ |  copy(self) -> <built-in function any>
+ |      Creates a copy of this object and returns it
+ |
+ |  count(self, text: str, *, search_in_first_column: bool = False, search_in_header_row: bool = False) -> int
+ |      Counts how often the text appears in the table
+ |
+
+...
+```
 
 
 ### .insert_column(index: int = 0, header_row_value: str = ' ', values: list = [' ']) -> None
+Inserts a column at the position `index`. The header row cells text is set to the value in `header_row_value` and the texts of the cells from the top to the bottom are set to the values in `values`.
 
 
 ### .insert_row(index: int = 0, first_column_value: str = ' ', values: list = [' ']) -> None
-
+Inserts a row at the position `index`. The first column cells text is set to the value in `first_column_value` and the texts of the cells from left to right are set to the values in `values`.
 
 ### .is_numeric_column(column: int) -> bool
+Returns `True` if all texts in this column are strings of integers, strings of floats or strings of float like values (like `'.8'` or `'2.'`).
 
 
 ### .is_numeric_row(row: int) -> bool
+Returns `True` if all texts in this row are strings of integers, strings of floats or strings of float like values (like `'.8'` or `'2.'`).
 
 
 ### .set_align(align: TextAlign) -> None
+Sets the align of all values in the table. It overwrites the aligns of all cells in the table. This doesn't change the header rows and first columns align.
 
 
 ### .set_align_at_cell(row: int, column: int, align: TextAlign) -> None
-
+Sets the align of the text of the cell at the position (`row`, `column`) to the text align in `align`. This function overwrites the current text align of the cell.
 
 ### .set_first_column(first_column: list) -> None
+Sets the texts of the first column to the texts in `first_column` (`first_column` is a list of strings).
 
 
 ### .set_first_column_align(align: TextAlign) -> None
+Sets the align of the first column to the align in `align`. This overwrites the current text aligns of all cell texts in the first column.
 
 
 ### .set_first_column_align_at_position(pos: int, align: TextAlign) -> None
+Sets the align of the cells text of the first column at the position `pos`. This overwrites the current text align of this first column cell.
 
 
 ### .set_header_row(header_row: list) -> None
+Sets the texts of the header row to the texts in `header_row` (`header_row` is a list of strings).
 
 
 ### .set_header_row_align(align: TextAlign) -> None
+Sets the align of the header row to the align in `align`. This overwrites the current text aligns of all cell texts in the header row.
 
 
 ### .set_header_row_align_at_position(pos: int, align: TextAlign) -> None
+Sets the align of the cells text of the header row at the position `pos`. This overwrites the current text align of this header row cell.
 
 
 ### .set_text_at_cell(row: int, column: int, text: str) -> None
-
+Sets the text of the cell at the position (`row`, `column`) to the value of `text`.
 
 ### .sum_column(column: int) -> float
+Sums up all values in the column at the index `column` and returns the sum as float. Raises a ValueError if the column isn't numeric (you can check this with `.is_numeric_column()`).
 
 
 ### .sum_row(row: int) -> float
+Sums up all values in the row at the index `row` and returns the sum as float. Raises a ValueError if the row isn't numeric (you can check this with `.is_numeric_row()`).
 
 
 ### .swap_columns(index1: int, index2: int) -> None
+Swaps the column at the position `index1` with the column at the position `index2`.
 
 
 ### .swap_rows(index1: int, index2: int) -> None
+Swaps the row at the position `index1` with the row at the position `index2`.
 
 
 ## BorderStyle()-class
+There are 13 standart border styles in the `BorderStyle()`-class:
+
+**INFO:** In your terminal are no gaps between the parts of the table (the distance between two lines is 0)
+
+`BorderStyle.ASCII`:
+```
++------+------+
+|      |      |
++------+------+
+|      |      |
++------+------+
+```
+
+`BorderStyle.BASIC`:
+```
++——————+——————+
+|      |      |
++——————+——————+
+|      |      |
++——————+——————+
+```
+
+`BorderStyle.DOUBLE`:
+```
+╔══════╦══════╗
+║      ║      ║
+╠══════╬══════╣
+║      ║      ║
+╚══════╩══════╝
+```
+
+`BorderStyle.HEAVY`:
+```
+┏━━━━━━┳━━━━━━┓
+┃      ┃      ┃
+┣━━━━━━╋━━━━━━┫
+┃      ┃      ┃
+┗━━━━━━┻━━━━━━┛
+```
+
+`BorderStyle.HEAVY_DASHED`:
+```
+┏╍╍╍╍╍╍┳╍╍╍╍╍╍┓
+┋      ┋      ┋
+┣╍╍╍╍╍╍╋╍╍╍╍╍╍┫
+┋      ┋      ┋
+┗╍╍╍╍╍╍┻╍╍╍╍╍╍┛
+```
+
+`BorderStyle.HORIZONTAL_HEAVY`:
+```
+━━━━━━━━━━━━━━━
+               
+━━━━━━━━━━━━━━━
+               
+━━━━━━━━━━━━━━━
+```
+
+`BorderStyle.HORIZONTAL_LIGHT`:
+```
+───────────────
+               
+───────────────
+               
+───────────────
+```
+
+`BorderStyle.LIGHT` (default):
+```
+┌──────┬──────┐
+│      │      │
+├──────┼──────┤
+│      │      │
+└──────┴──────┘
+```
+
+`BorderStyle.LIGHT_ARC`:
+```
+╭──────┬──────╮
+│      │      │
+├──────┼──────┤
+│      │      │
+╰──────┴──────╯
+```
+
+`BorderStyle.LIGHT_DASHED`:
+```
+┌╌╌╌╌╌╌┬╌╌╌╌╌╌┐
+┊      ┊      ┊
+├╌╌╌╌╌╌┼╌╌╌╌╌╌┤
+┊      ┊      ┊
+└╌╌╌╌╌╌┴╌╌╌╌╌╌┘
+```
+
+`BorderStyle.VERTICAL_HEAVY`:
+```
+┃      ┃      ┃
+┃      ┃      ┃
+┃      ┃      ┃
+┃      ┃      ┃
+┃      ┃      ┃
+```
+
+`BorderStyle.VERTICAL_LIGHT`:
+```
+│      │      │
+│      │      │
+│      │      │
+│      │      │
+│      │      │
+```
+
+`BorderStyle.NO_BORDER`:
+```
+
+
+
+
+
+```
+;-)
+
+
+But you can also create your own styles and use them with: `BorderStyle.MY_STYLES['your_style_name']`
 
 ### .create_style(self, name: str, vertical_line: str, horizontal_line: str, upper_left_corner: str, upper_T_corner: str, upper_right_corner: str, left_T_corner: str, X_cross: str, right_T_corner: str, lower_left_corner: str, lower_T_corner: str, lower_right_corner: str) -> None
+Creates a new border style. You can use this new borderstyle with `BorderStyle.MY_STYLES['name']`.
+
+The default (LIGHT) `vertical_line` is: "─"
+
+The default (LIGHT) `horizontal_line` is: "│"
+
+The default (LIGHT) `upper_left_corner` is: "┌"
+
+The default (LIGHT) `upper_T_corner` is: "┬"
+
+The default (LIGHT) `upper_right_corner` is: "┐"
+
+The default (LIGHT) `left_T_corner` is: "├"
+
+The default (LIGHT) `X_cross` is: "┼"
+
+The default (LIGHT) `right_T_corner` is: "┤"
+
+The default (LIGHT) `lower_left_corner` is: "└"
+
+The default (LIGHT) `lower_T_corner` is: "┴"
+
+The default (LIGHT) `lower_right_corner` is: "┘"
 
 
 ### .create_style_from_tuple(self, name: str, style: tuple) -> None
+Creates a new style from a tuple. You can use this new borderstyle with `BorderStyle.MY_STYLES['name']`.
 
+The tuple should look like this (default/LIGHT):
+```python
+("─", "│", "┌", "┬", "┐", "├", "┼", "┤", "└", "┴", "┘")
+```
 
 ## TableStyle()-class
+There are 6 table styles:
+
+`TableStyle.DEFAULT`:
+```
+┌──────┬──────┬──────┐
+│      │      │      │
+├──────┼──────┼──────┤
+│      │      │      │
+├──────┼──────┼──────┤
+│      │      │      │
+└──────┴──────┴──────┘
+```
+
+`TableStyle.ONLY_BORDER`:
+```
+┌────────────────────┐
+│                    │
+│                    │ 
+│                    │
+│                    │ 
+│                    │
+└────────────────────┘
+```
+
+`TableStyle.WITHOUT_BORDER`:
+```
+
+      │      │      
+──────┼──────┼──────
+      │      │      
+──────┼──────┼──────
+      │      │      
+
+```
+
+`TableStyle.WITHOUT_FIRST_COLUMN`:
+```
+┌──────┬──────┐
+│      │      │
+├──────┼──────┤
+│      │      │
+├──────┼──────┤
+│      │      │
+└──────┴──────┘
+```
+
+`TableStyle.WITHOUT_HEADER_ROW`:
+```
+┌──────┬──────┬──────┐
+│      │      │      │
+├──────┼──────┼──────┤
+│      │      │      │
+└──────┴──────┴──────┘
+```
+
+`TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN`:
+```
+┌──────┬──────┐
+│      │      │
+├──────┼──────┤
+│      │      │
+└──────┴──────┘
+```
+
+
+# Create Charts with PyGraph
 
 
 ## BarChart()-class
