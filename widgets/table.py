@@ -1034,7 +1034,7 @@ class Table:
             print_rows.append(index*2+1)
         print_rows.append(self.rows*2)
 
-        for print_row in print_rows:
+        for index, print_row in enumerate(print_rows):
             if print_row == self.rows*2:    # lowest border piece/ outer border (and sum row)
                 
                 if self.sum_row:
@@ -1094,21 +1094,15 @@ class Table:
                 if int(print_row / 2) in self.hidden_rows:
                     continue
                 
-                if self.style in [TableStyle.WITHOUT_HEADER_ROW, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
-                    if print_row != 0:
-                        if self.style == TableStyle.ONLY_BORDER:
-                            table += self.borderstyle[1] + (' ' * (longest_row_length + 1)) * (self.columns-len(self.hidden_columns)) + ' ' * longest_row_length + self.borderstyle[1] + '\n'
-                        elif self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
-                            table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
-                        else:
-                            table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-1-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
+                if self.style in [TableStyle.WITHOUT_HEADER_ROW, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN] and index == 0:
+                    continue
+
+                if self.style == TableStyle.ONLY_BORDER:
+                    table += self.borderstyle[1] + (' ' * (longest_row_length + 1)) * (self.columns-len(self.hidden_columns)) + ' ' * longest_row_length + self.borderstyle[1] + ' \n'
+                elif self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
+                    table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
                 else:
-                    if self.style == TableStyle.ONLY_BORDER:
-                        table += self.borderstyle[1] + (' ' * (longest_row_length + 1)) * (self.columns-len(self.hidden_columns)) + ' ' * longest_row_length + self.borderstyle[1] + ' \n'
-                    elif self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN]:
-                        table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
-                    else:
-                        table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-1-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
+                    table += (self.borderstyle[5] if self.style != TableStyle.WITHOUT_BORDER else '') + (self.borderstyle[0] * longest_row_length + self.borderstyle[6]) * (self.columns-1-len(self.hidden_columns)) + self.borderstyle[0] * longest_row_length + (self.borderstyle[7] if self.style != TableStyle.WITHOUT_BORDER else '') + '\n'
             
             else:                           # cell texts
                 if self.style not in [TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW_AND_FIRST_COLUMN] and print_row//2 not in self.hidden_rows:
