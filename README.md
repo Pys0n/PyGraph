@@ -40,7 +40,7 @@ Only the text get converted. Styles and other things are ignored.
 Creates a copy of the `Table()`-object and everything saved in the `Table()`-object.
 
 
-### create_from_dict(dict_of_content: dict) -> None
+### .create_from_dict(dict_of_content: dict) -> None
 Takes a python dictionary and turns it into a `TableValues()`-object and set the table values to this `TableValues()`-object.
 
 The dictionary must have this format:

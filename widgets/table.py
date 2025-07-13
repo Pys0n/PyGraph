@@ -805,69 +805,78 @@ class Table:
                         self.sorted_row_indexes.append(item[1])
 
 
-    def create_from_dict(self, dict_of_content: dict) -> None:
+    def create_from_dict(dict_of_content: dict) -> any:
         '''
-        Creates the table from the data in the dict
+        Creates a table from the data in the dict
         '''
-        self.set_title(dict_of_content['title'])
+        table = Table()
+        table.set_title(dict_of_content['title'])
 
         values = TableValues(header_row=dict_of_content['header_row'],
                              first_column=dict_of_content['first_column'])
         values.values = dict_of_content['values']
 
-        self.set_values(values)
+        table.set_values(values)
+
+        return table
 
 
-    def create_from_list(self, list_of_content: list) -> None:
+    def create_from_list(list_of_content: list) -> any:
         '''
-        Creates the table from the data in the list
+        Creates a table from the data in the list
         '''
-        self.set_title(list_of_content[0])
+        table = Table()
+        table.set_title(list_of_content[0])
 
         header_row = []
         for item in list_of_content[1][1:]:
-            header_row.append([item, len(item), self.values.header_row_align])
+            header_row.append([item, len(item), table.values.header_row_align])
 
         first_column = []
         values = {}
         for row_index in range(2, len(list_of_content)):
-            first_column.append([list_of_content[row_index][0], len(list_of_content[row_index][0]), self.values.first_column_align])
+            first_column.append([list_of_content[row_index][0], len(list_of_content[row_index][0]), table.values.first_column_align])
 
             for column_index in range(1, len(list_of_content[row_index])):
                 text = list_of_content[row_index][column_index]
-                values[(row_index-2, column_index-1)] = [text, len(text), self.values.align]
+                values[(row_index-2, column_index-1)] = [text, len(text), table.values.align]
 
         tablevalues = TableValues(header_row=header_row,
                              first_column=first_column)
         tablevalues.values = values
 
-        self.set_values(tablevalues)
+        table.set_values(tablevalues)
+
+        return Table
 
 
-    def create_from_tuple(self, tuple_of_content: tuple) -> None:
+    def create_from_tuple(tuple_of_content: tuple) -> any:
         '''
-        Creates the table from the data in the tuple
+        Creates a table from the data in the tuple
         '''
-        self.set_title(tuple_of_content[0])
+        table = Table()
+        table.set_title(tuple_of_content[0])
 
         header_row = []
         for item in tuple_of_content[1][1:]:
-            header_row.append([item, len(item), self.values.header_row_align])
+            header_row.append([item, len(item), table.values.header_row_align])
 
         first_column = []
         values = {}
         for row_index in range(2, len(tuple_of_content)):
-            first_column.append([tuple_of_content[row_index][0], len(tuple_of_content[row_index][0]), self.values.first_column_align])
+            first_column.append([tuple_of_content[row_index][0], len(tuple_of_content[row_index][0]), table.values.first_column_align])
 
             for column_index in range(1, len(tuple_of_content[row_index])):
                 text = tuple_of_content[row_index][column_index]
-                values[(row_index-2, column_index-1)] = [text, len(text), self.values.align]
+                values[(row_index-2, column_index-1)] = [text, len(text), table.values.align]
 
         tablevalues = TableValues(header_row=header_row,
                              first_column=first_column)
         tablevalues.values = values
 
-        self.set_values(tablevalues)
+        table.set_values(tablevalues)
+
+        return table
 
     
     def convert_to_markdown(self, filename: str = 'Table') -> None:
