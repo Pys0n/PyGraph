@@ -805,7 +805,8 @@ class Table:
                         self.sorted_row_indexes.append(item[1])
 
 
-    def create_from_dict(dict_of_content: dict) -> any:
+    @classmethod
+    def create_from_dict(cls, dict_of_content: dict) -> any:
         '''
         Creates a table from the data in the dict
         '''
@@ -821,7 +822,8 @@ class Table:
         return table
 
 
-    def create_from_list(list_of_content: list) -> any:
+    @classmethod
+    def create_from_list(cls, list_of_content: list) -> any:
         '''
         Creates a table from the data in the list
         '''
@@ -850,7 +852,8 @@ class Table:
         return Table
 
 
-    def create_from_tuple(tuple_of_content: tuple) -> any:
+    @classmethod
+    def create_from_tuple(cls, tuple_of_content: tuple) -> any:
         '''
         Creates a table from the data in the tuple
         '''

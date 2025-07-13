@@ -40,8 +40,8 @@ Only the text get converted. Styles and other things are ignored.
 Creates a copy of the `Table()`-object and everything saved in the `Table()`-object.
 
 
-### .create_from_dict(dict_of_content: dict) -> None
-Takes a python dictionary and turns it into a `TableValues()`-object and set the table values to this `TableValues()`-object.
+### .create_from_dict(dict_of_content: dict) -> Table
+Takes a python dictionary and turns it into a `Table()`-object and returns it.
 
 The dictionary must have this format:
 
@@ -65,8 +65,8 @@ You can get a dictionary like this with the function `.get_dict()`
 `values` is a dictionary with the position of the cell as tuple with `x: int` and `y: int` as key and a value like the lists in `header_row` and `first_column`.
 
 
-### .create_from_list(list_of_content) -> None
-Creates a new `TableValues()`-object and sets the table values to this object.
+### .create_from_list(list_of_content) -> Table
+Creates a new `Table()`-object and returns it.
 
 The list must have this format:
 ```python
@@ -86,8 +86,8 @@ The first list (index 1) is the header row. The first value in this list is igno
 
 All other lists (index 2 - index n) are structured like this: `['first_column_text', 'cell_1', ..., 'cell_n']`.
 
-### .create_from_tuple(tuple_of_content) -> None
-Creates a new `TableValues()`-object and sets the table values to this object.
+### .create_from_tuple(tuple_of_content) -> Table
+Creates a new `Table()`-object and returns it.
 
 The tuple must have this format:
 ```python
