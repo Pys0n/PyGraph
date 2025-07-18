@@ -20,8 +20,18 @@ class BorderStyle:
 
 
     def create_style_from_tuple(self, name: str, style: tuple) -> None:
+        '''
+        Creates a border style from a tuple
+        '''
+        if not isinstance(style, tuple) and not isinstance(style, list):
+            raise TypeError('Expected style to be a tuple, got '+type(style).__name__)
         if len(style) != 11:
-            raise ValueError('Excpected a tuple with length 11')
+            raise ValueError('Excpected style to be a tuple with length 11')
+        for item in style:
+            if not isinstance(item, str):
+                raise TypeError('Expected style to be a tuple of strings, got tuple of '+type(item).__name__)
+            if len(item) != 1:
+                raise ValueError('Excpected style to be a tuple of single characters or symbols')
         
         self.MY_STYLES[name] = style
 
@@ -34,6 +44,12 @@ class BorderStyle:
                                 upper_T_corner, upper_right_corner, left_T_corner,
                                 X_cross, right_T_corner, lower_left_corner,
                                 lower_T_corner, lower_right_corner)
+        for style in self.MY_STYLES[name]:
+            if not isinstance(style, str):
+                return TypeError('Excpected argument at position '+str(self.MY_STYLES[name].index(style)+2)+' to be a string, got '+type(style).__name__)
+            if len(style) != 1:
+                raise ValueError('Excpected argument at position '+str(self.MY_STYLES[name].index(style)+2)+' to be a single character or symbol')
+
 
 
 class TableStyle:
@@ -47,6 +63,11 @@ class TableStyle:
 
 class TableValues:
     def __init__(self, header_row: list = [], first_column: list = []):
+        if not isinstance(header_row, list):
+            raise TypeError('Excpected header_row to be a list, got '+type(header_row).__name__)
+        if not isinstance(first_column, list):
+            raise TypeError('Excpected first_column to be a list, got '+type(first_column).__name__)
+
         self.header_row: list[list[str, int, TextAlign]] = header_row
         self.first_column: list[list[str, int, TextAlign]] = first_column
         self.values: dict[tuple[int, int], list[str, int, TextAlign]] = {}
@@ -67,6 +88,12 @@ class TableValues:
         '''
         Sets the header row of your TableValues
         '''
+        if not isinstance(header_row, list) or  not isinstance(header_row, tuple):
+            raise TypeError('Excpected header_row to be a list, got '+type(header_row).__name__)
+        for item in header_row:
+            if not isinstance(item, str):
+                raise TypeError('Excpected item at index '+str(header_row.index(item))+' to be a str, got '+type(item).__name__)
+        
         for i in range(len(header_row)):
             header_row[i] = [header_row[i], len(header_row[i]), self.header_row_align]
         self.header_row = header_row
@@ -76,6 +103,12 @@ class TableValues:
         '''
         Sets the first column of your TableValues
         '''
+        if not isinstance(first_column, list) or  not isinstance(first_column, tuple):
+            raise TypeError('Excpected first_column to be alist, got '+type(first_column).__name__)
+        for item in first_column:
+            if not isinstance(item, str):
+                raise TypeError('Excpected item at index '+str(first_column.index(item))+' to be a str, got '+type(item).__name__)
+        
         for i in range(len(first_column)):
             first_column[i] = [first_column[i], len(first_column[i]), self.first_column_align]
         self.first_column = first_column
@@ -85,6 +118,11 @@ class TableValues:
         '''
         Sets the align for an first column item
         '''
+        if not isinstance(pos, int):
+            raise TypeError('Excpected pos to be an int, got '+type(pos).__name__)
+        if not isinstance(align, TextAlign) and not isinstance(align, str):
+            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+
         self.first_column[pos][2] = align
 
 
@@ -92,6 +130,11 @@ class TableValues:
         '''
         Sets the align for an header row item
         '''
+        if not isinstance(pos, int):
+            raise TypeError('Excpected pos to be an int, got '+type(pos).__name__)
+        if not isinstance(align, TextAlign) and not isinstance(align, str):
+            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        
         self.header_row[pos][2] = align
 
     
@@ -99,6 +142,9 @@ class TableValues:
         '''
         Sets the align for the first column
         '''
+        if not isinstance(align, TextAlign) and not isinstance(align, str):
+            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        
         for i in range(len(self.first_column)):
             self.first_column[i][2] = align
         
@@ -109,6 +155,9 @@ class TableValues:
         '''
         Sets the align for the header row
         '''
+        if not isinstance(align, TextAlign) and not isinstance(align, str):
+            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        
         for i in range(len(self.header_row)):
             self.header_row[i][2] = align
         
@@ -119,6 +168,13 @@ class TableValues:
         '''
         Changes the text of the cell at the position
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
+        if not isinstance(text, str):
+            raise TypeError('Excpected text to be a str, got '+type(text).__name__)
+        
         self.values[(row, column)] = [text, len(text), self.align]
 
     
@@ -126,6 +182,13 @@ class TableValues:
         '''
         Sets the align of the cell at the position
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
+        if not isinstance(align, TextAlign) and not isinstance(align, str):
+            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        
         self.values[(row, column)][2] = align
     
     
@@ -133,6 +196,9 @@ class TableValues:
         '''
         Sets the align of all cells
         '''
+        if not isinstance(align, TextAlign) and not isinstance(align, str):
+            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        
         for col_index in range(len(self.first_column)):
             for row_index in range(len(self.header_row)):
                 self.values[(row_index, col_index)][2] = align
@@ -144,14 +210,22 @@ class TableValues:
         '''
         Returns the text of the cell at the position
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
+        
         return self.values[(row, column)][0]
     
 
-    def get_cell_with_text(self, text: str) -> tuple[int, int]:
+    def get_cell_with_text(self, text: str) -> tuple[int, int] | None:
         '''
         Returns the first position of the text
         Returns None if the text don't appears in the table
         '''
+        if not isinstance(text, str):
+            raise TypeError('Excpected text to be a str, got '+type(text).__name__)
+
         for key in self.values.keys():
             if self.values[key][0] == text:
                 return key
@@ -161,6 +235,11 @@ class TableValues:
         '''
         Returns the length of the cell at the position
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
+        
         return self.values[(row, column)][1]
 
 
@@ -168,6 +247,11 @@ class TableValues:
         '''
         Returns the align of the cell at the position
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
+        
         return self.values[(row, column)][2]
     
 
@@ -175,6 +259,9 @@ class TableValues:
         '''
         Returns the text of the first column and all texts of the row as list
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        
         texts = []
 
         for col in range(len(self.header_row)):
@@ -187,6 +274,9 @@ class TableValues:
         '''
         Returns the text of the header row and all texts of the column as list
         '''
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
+        
         texts = []
         
         for row in range(len(self.first_column)):
@@ -199,6 +289,9 @@ class TableValues:
         '''
         Returns `True` if the row only includ intergers and floats
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        
         for col in range(len(self.header_row)):
             if self.values[(row, col)][0].count('.') > 1:
                 return False
@@ -214,6 +307,9 @@ class TableValues:
         '''
         Returns `True` if the column only includ intergers and floats
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+
         for row in range(len(self.first_column)):
             if self.values[(row, column)][0].count('.') > 1:
                 return False
@@ -229,11 +325,18 @@ class TableValues:
         '''
         Adds a new row to the end of the table
         '''
+        if not isinstance(first_column_value, str):
+            raise TypeError('Excpected first_column_value to be a str, got '+type(first_column_value).__name__)
+        if len(values) != len(self.header_row):
+            raise ValueError(f'Expected values to have {len(self.header_row)} values, got {len(values)}')
+        if not isinstance(values, list) and not isinstance(values, tuple):
+            raise TypeError('Excpected values to be a list, got '+type(values).__name__)
+        for item in values:
+            if not isinstance(item, str):
+                raise TypeError('Excpected index '+str(values.index(item))+' of values to be a str, got '+type(item).__name__)
+
         if values == [' ']:
             values *= len(self.header_row)
-        
-        elif len(values) != len(self.header_row):
-            raise ValueError(f'Expected {len(self.header_row)} values, got {len(values)}')
     
         for column in range(len(self.header_row)):
             self.values[(len(self.first_column), column)] = [values[column], len(values[column]), self.align]
@@ -245,11 +348,22 @@ class TableValues:
         '''
         Inserts a new row at the index `index` of the table
         '''
+        if not isinstance(index, int):
+            raise TypeError('Excpected index to be an int, got '+type(index).__name__)
+        if index < 0 or index > len(self.header_row):
+            raise ValueError('Excpected index with a value between 0 and '+str(len(self.header_row)))
+        if not isinstance(first_column_value, str):
+            raise TypeError('Excpected first_column_value to be a str, got '+type(first_column_value).__name__)
+        if len(values) != len(self.header_row):
+            raise ValueError(f'Expected values to have {len(self.header_row)} values, got {len(values)}')
+        if not isinstance(values, list) and not isinstance(values, tuple):
+            raise TypeError('Excpected values to be a list, got '+type(values).__name__)
+        for item in values:
+            if not isinstance(item, str):
+                raise TypeError('Excpected index '+str(values.index(item))+' of values to be a str, got '+type(item).__name__)
+
         if values == [' ']:
             values *= len(self.header_row)
-        
-        elif len(values) != len(self.header_row):
-            raise ValueError(f'Expected {len(self.header_row)} values, got {len(values)}')
     
         new_values = {}
         for key, value in self.values.items():
@@ -270,6 +384,11 @@ class TableValues:
         '''
         Deletes the row at the index `index` of the table
         '''
+        if not isinstance(index, int):
+            raise TypeError('Excpected index to be an int, got '+type(index).__name__)
+        if index < 0 or index > len(self.header_row):
+            raise ValueError('Excpected index with a value between 0 and '+str(len(self.header_row)))
+        
         new_values = {}
         for key, value in self.values.items():
             if key[0] > index:
@@ -286,6 +405,16 @@ class TableValues:
         '''
         Swap the rows at the index `index1` and at the index `index2` of the table
         '''
+        if not isinstance(index1, int):
+            raise TypeError('Excpected index1 to be an int, got '+type(index1).__name__)
+        if index1 < 0 or index1 > len(self.header_row):
+            raise ValueError('Excpected index1 with a value between 0 and '+str(len(self.header_row)))
+        if not isinstance(index2, int):
+            raise TypeError('Excpected index2 to be an int, got '+type(index2).__name__)
+        if index2 < 0 or index2 > len(self.header_row):
+            raise ValueError('Excpected index2 with a value between 0 and '+str(len(self.header_row)))
+
+
         for column_index in range(len(self.header_row)):
             self.values[(index1, column_index)], self.values[(index2, column_index)] = self.values[(index2, column_index)], self.values[(index1, column_index)]
         
@@ -296,11 +425,18 @@ class TableValues:
         '''
         Adds a new column to the end of the table
         '''
+        if not isinstance(header_row_value, str):
+            raise TypeError('Excpected header_row_value to be a str, got '+type(header_row_value).__name__)
+        if len(values) != len(self.first_column):
+            raise ValueError(f'Expected values to have {len(self.first_column)} values, got {len(values)}')
+        if not isinstance(values, list) and not isinstance(values, tuple):
+            raise TypeError('Excpected values to be a list, got '+type(values).__name__)
+        for item in values:
+            if not isinstance(item, str):
+                raise TypeError('Excpected index '+str(values.index(item))+' of values to be a str, got '+type(item).__name__)
+            
         if values == [' ']:
             values *= len(self.first_column)
-        
-        elif len(values) != len(self.first_column):
-            raise ValueError(f'Expected {len(self.first_column)} values, got {len(values)}')
     
         for row in range(len(self.first_column)):
             self.values[(row, len(self.header_row))] = [values[row], len(values[row]), self.align]
@@ -312,11 +448,22 @@ class TableValues:
         '''
         Inserts a new column at the index `index` of the table
         '''
+        if not isinstance(index, int):
+            raise TypeError('Excpected index to be an int, got '+type(index).__name__)
+        if index < 0 or index > len(self.first_column):
+            raise ValueError('Excpected index with a value between 0 and '+str(len(self.first_column)))
+        if not isinstance(header_row_value, str):
+            raise TypeError('Excpected header_row_value to be a str, got '+type(header_row_value).__name__)
+        if len(values) != len(self.first_column):
+            raise ValueError(f'Expected values to have {len(self.first_column)} values, got {len(values)}')
+        if not isinstance(values, list) and not isinstance(values, tuple):
+            raise TypeError('Excpected values to be a list, got '+type(values).__name__)
+        for item in values:
+            if not isinstance(item, str):
+                raise TypeError('Excpected index '+str(values.index(item))+' of values to be a str, got '+type(item).__name__)
+            
         if values == [' ']:
             values *= len(self.first_column)
-        
-        elif len(values) != len(self.first_column):
-            raise ValueError(f'Expected {len(self.first_column)} values, got {len(values)}')
     
         new_values = {}
         for key, value in self.values.items():
@@ -337,6 +484,11 @@ class TableValues:
         '''
         Deletes the column at the index `index` of the table
         '''
+        if not isinstance(index, int):
+            raise TypeError('Excpected index to be an int, got '+type(index).__name__)
+        if index < 0 or index > len(self.header_row):
+            raise ValueError('Excpected index with a value between 0 and '+str(len(self.header_row)))
+        
         new_values = {}
         for key, value in self.values.items():
             if key[1] > index:
@@ -353,6 +505,15 @@ class TableValues:
         '''
         Swap the columns at the index `index1` and at the index `index2` of the table
         '''
+        if not isinstance(index1, int):
+            raise TypeError('Excpected index1 to be an int, got '+type(index1).__name__)
+        if index1 < 0 or index1 > len(self.header_row):
+            raise ValueError('Excpected index1 with a value between 0 and '+str(len(self.header_row)))
+        if not isinstance(index2, int):
+            raise TypeError('Excpected index2 to be an int, got '+type(index2).__name__)
+        if index2 < 0 or index2 > len(self.header_row):
+            raise ValueError('Excpected index2 with a value between 0 and '+str(len(self.header_row)))
+        
         for row_index in range(len(self.first_column)):
             self.values[(row_index, index1)], self.values[(row_index, index2)] = self.values[(row_index, index2)], self.values[(row_index, index1)]
         
@@ -363,6 +524,13 @@ class TableValues:
         '''
         Counts how often the text appears in the table
         '''
+        if not isinstance(text, str):
+            raise TypeError('Excpected text to be a str, got '+type(text).__name__)
+        if not isinstance(search_in_first_column, bool):
+            raise TypeError('Excpected search_in_first_column to be a bool, got '+type(search_in_first_column).__name__)
+        if not isinstance(search_in_header_row, bool):
+            raise TypeError('Excpected search_in_header_row to be a bool, got '+type(search_in_header_row).__name__)
+
         texts = []
         for item in self.values.values():
             texts.append(item[0])
@@ -389,6 +557,8 @@ class TableValues:
         Sums all values is this row
         The row must be numeric (`is_numeric_row()`)
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
         if not self.is_numeric_row(row):
             raise ValueError(f'The row {row} is not numeric ( check with is_numeric_row() )')
         
@@ -404,6 +574,8 @@ class TableValues:
         Sums all values is this column
         The column must be numeric (`is_numeric_column()`)
         '''
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
         if not self.is_numeric_column(column):
             raise ValueError(f'The column {column} is not numeric ( check with is_numeric_column() )')
         
@@ -434,8 +606,26 @@ class Table:
     Creates a new Table object.
     '''
 
-
     def __init__(self, title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues(), style: TableStyle = TableStyle.DEFAULT, borderstyle: BorderStyle = BorderStyle.LIGHT, default_cell_length: int = 6, hide_title: bool = False) -> None:
+        if not isinstance(title, str):
+            raise TypeError('Excpected title to be a str, got '+type(title).__name__)
+        if not isinstance(columns, int):
+            raise TypeError('Excpected columns to be an int, got '+type(columns).__name__)
+        if not isinstance(rows, int):
+            raise TypeError('Excpected rows to be an int, got '+type(rows).__name__)
+        if not isinstance(values, TableValues):
+            raise TypeError('Excpected values to be TableValues, got '+type(values).__name__)
+        if not isinstance(style, TableStyle) and not isinstance(style, str):
+            raise TypeError('Excpected style to be a TableStyle, got '+type(style).__name__)
+        if not isinstance(borderstyle, BorderStyle) and not isinstance(borderstyle, str):
+            raise TypeError('Excpected borderstyle to be a BorderStyle, got '+type(borderstyle).__name__)
+        if not isinstance(default_cell_length, int):
+            raise TypeError('Excpected default_cell_length to be an int, got '+type(default_cell_length).__name__)
+        if default_cell_length <= 0:
+            raise ValueError('Excpected default_cell_length to be 1 or higher, got '+str(default_cell_length))
+        if not isinstance(hide_title, bool):
+            raise TypeError('Excpected hide_title to be a bool, got '+type(hide_title).__name__)
+
         self.title: str = title
         self.columns: int = columns
         self.rows: int = rows
@@ -463,6 +653,9 @@ class Table:
         '''
         Sets the title of your Table
         '''
+        if not isinstance(title, str):
+            raise TypeError('Excpected tiel to be a str, got '+type(title).__name__)
+        
         self.title = title
 
 
@@ -470,6 +663,9 @@ class Table:
         '''
         Sets the amount of columns of your Table
         '''
+        if not isinstance(columns, int):
+            raise TypeError('Excpected columns to be an int, got '+type(columns).__name__)
+
         self.columns = columns
 
 
@@ -477,6 +673,9 @@ class Table:
         '''
         Sets the amount of rows of your Table
         '''
+        if not isinstance(rows, int):
+            raise TypeError('Excpected rows to be an int, got '+type(rows).__name__)
+        
         self.rows = rows
 
 
@@ -484,6 +683,9 @@ class Table:
         '''
         Sets the Table values
         '''
+        if not isinstance(values, TableValues):
+            raise TypeError('Excpected values to be TableValues, got '+type(values).__name__)
+        
         self.values = values
         if self.rows != len(values.first_column):
             self.rows = len(values.first_column)
@@ -498,6 +700,11 @@ class Table:
         '''
         Sets the default length of all cells
         '''
+        if not isinstance(default_cell_length, int):
+            raise TypeError('Excpected default_cell_length to be an int, got '+type(default_cell_length).__name__)
+        if default_cell_length <= 0:
+            raise ValueError('Excpected default_cell_length to be 1 or higher')
+        
         self.default_cell_length = default_cell_length
 
 
@@ -505,6 +712,13 @@ class Table:
         '''
         Sets the color of the cell at the position
         '''
+        if not isinstance(row, int):
+            raise TypeError('Excpected row to be an int, got '+type(row).__name__)
+        if not isinstance(column, int):
+            raise TypeError('Excpected column to be an int, got '+type(column).__name__)
+        if not isinstance(color, ColoredText) and not isinstance(color, str):
+            raise TypeError('Excpected color to be a ColoredText, got '+type(color).__name__)
+        
         self.values.values[(row, column)][0] = color + self.values.get_text_from_cell(row, column) + ColoredText.END
 
 
@@ -512,6 +726,9 @@ class Table:
         '''
         Sets the color of the header row
         '''
+        if not isinstance(color, ColoredText) and not isinstance(color, str):
+            raise TypeError('Excpected color to be a ColoredText, got '+type(color).__name__)
+        
         for i in range(len(self.values.header_row)):
             self.values.header_row[i][0] = color + self.values.header_row[i][0] + color
 
@@ -520,6 +737,9 @@ class Table:
         '''
         Sets the color of the first column
         '''
+        if not isinstance(color, ColoredText) and not isinstance(color, str):
+            raise TypeError('Excpected color to be a ColoredText, got '+type(color).__name__)
+        
         for i in range(len(self.values.first_column)):
             self.values.first_column[i][0] = color + self.values.first_column[i][0] + color
 
@@ -528,6 +748,9 @@ class Table:
         '''
         Sets the style of the border
         '''
+        if not isinstance(borderstyle, BorderStyle) and not isinstance(borderstyle, tuple):
+            raise TypeError('Excpected borderstyle to be a BorderStyle, got '+type(borderstyle).__name__)
+
         self.borderstyle = borderstyle
 
 
@@ -535,6 +758,9 @@ class Table:
         '''
         Sets the style of the table
         '''
+        if not isinstance(style, TableStyle) and not isinstance(style, tuple):
+            raise TypeError('Excpected style to be a TableStyle, got '+type(borderstyle).__name__)
+        
         self.style = style
 
 
@@ -542,6 +768,9 @@ class Table:
         '''
         Hide or shows the title of the table
         '''
+        if not isinstance(hide_title, bool):
+            raise TypeError('Excpected hide_title to be a bool, got '+type(hide_title).__name__)
+
         self.hide_title = hide_title
 
 
@@ -549,6 +778,9 @@ class Table:
         '''
         Mark the row as hidden
         '''
+        if not isinstance(row_index, int):
+            raise TypeError('Excpected row_index to be an int, got '+type(row_index).__name__)
+        
         self.hidden_rows.append(row_index)
 
 
@@ -556,6 +788,12 @@ class Table:
         '''
         Mark the rows as hidden
         '''
+        if not isinstance(row_indexes, list):
+            raise TypeError('Excpected row_indexes to be an list, got '+type(row_indexes).__name__)
+        for item in row_indexes:
+            if not isinstance(item, int):
+                raise TypeError('Excpected row_indexes to be a list of int, got list of '+type(item).__name__)
+        
         self.hidden_rows += row_indexes
 
 
@@ -563,6 +801,9 @@ class Table:
         '''
         Mark the column as hidden
         '''
+        if not isinstance(column_index, int):
+            raise TypeError('Excpected column_index to be an int, got '+type(column_index).__name__)
+        
         self.hidden_columns.append(column_index)
 
 
@@ -570,21 +811,36 @@ class Table:
         '''
         Mark the columns as hidden
         '''
+        if not isinstance(column_indexes, list):
+            raise TypeError('Excpected column_indexes to be a list, got '+type(column_indexes).__name__)
+        for item in column_indexes:
+            if not isinstance(item, int):
+                raise TypeError('Excpected column_indexes to be a list of int, got list of '+type(item).__name__)
+            
         self.hidden_columns += column_indexes
 
 
     def show_row(self, row_index: int) -> None:
         '''
-        Mark the row as hidden
+        Unmark the row as hidden
         '''
+        if not isinstance(row_index, int):
+            raise TypeError('Excpected row_index to be an int, got '+type(row_index).__name__)
+        
         if row_index in self.hidden_rows:
             self.hidden_rows.remove(row_index)
 
 
     def show_rows(self, row_indexes: list[int]) -> None:
         '''
-        Mark the rows as hidden
+        Unmark the rows as hidden
         '''
+        if not isinstance(row_indexes, list):
+            raise TypeError('Excpected row_indexes to be a list, got '+type(row_indexes).__name__)
+        for item in row_indexes:
+            if not isinstance(item, int):
+                raise TypeError('Excpected row_indexes to be a list of int, got list of '+type(item).__name__)
+            
         for index in row_indexes:
             if index in self.hide_rows:
                 self.hidden_rows.remove(index)
@@ -592,30 +848,44 @@ class Table:
 
     def show_column(self, column_index: int) -> None:
         '''
-        Mark the column as hidden
+        Unmark the column as hidden
         '''
+        if not isinstance(column_index, int):
+            raise TypeError('Excpected column_index to be an int, got '+type(column_index).__name__)
+        
         if column_index in self.hidden_columns:
             self.hidden_columns.remove(column_index)
 
 
     def show_columns(self, column_indexes: list[int]) -> None:
         '''
-        Mark the columns as hidden
+        Unmark the columns as hidden
         '''
+        if not isinstance(column_indexes, list):
+            raise TypeError('Excpected column_indexes to be a list, got '+type(column_indexes).__name__)
+        for item in column_indexes:
+            if not isinstance(item, int):
+                raise TypeError('Excpected column_indexes to be a list of int, got list of '+type(item).__name__)
+            
         for index in column_indexes:
             if index in self.hide_columns:
                 self.hidden_columns.remove(index)
 
     
-    def show_sum_row(self, columns: list) -> None:
+    def show_sum_row(self, columns: list[int]) -> None:
         '''
         Adds a row with the sums of the columns in `columns` to the end of the table
         '''
-        self.sum_row = True
-
+        if not isinstance(columns, list) and not isinstance(columns, tuple):
+            raise TypeError('Excpected columns to be a list, got '+type(columns).__name__)
+        for item in columns:
+            if not isinstance(item, int):
+                raise TypeError('Excpected columns to be a list of int, got list of '+type(item).__name__)
         for col in columns:
             if not self.values.is_numeric_column(col):
                 raise ValueError(f'The column {col} is not a numeric column ( check with is_numeric_column() )')
+
+        self.sum_row = True
         
         self.sum_row_columns = columns
 
@@ -738,6 +1008,9 @@ class Table:
         '''
         Returns True if the row at the index `row_index` is hidden
         '''
+        if not isinstance(row_index, int):
+            raise TypeError('Excpected row_index to be an int, got '+type(row_index).__name__)
+        
         return row_index in self.hidden_rows
     
     
@@ -745,6 +1018,9 @@ class Table:
         '''
         Returns True if the column at the index `column_index` is hidden
         '''
+        if not isinstance(column_index, int):
+            raise TypeError('Excpected column_index to be an int, got '+type(column_index).__name__)
+        
         return column_index in self.hidden_columns
     
 
@@ -759,6 +1035,11 @@ class Table:
         '''
         Sorts the table data by the row at the index `row_index`
         '''
+        if not isinstance(row_index, int):
+            raise TypeError('Excpected row_index to be an int, got '+type(row_index).__name__)
+        if not isinstance(reverse, bool):
+            raise TypeError('Excpected reverse to be a bool, got '+type(reverse).__name__)
+
         self.sorted_column_indexes = []
 
         row_texts = []
@@ -784,6 +1065,11 @@ class Table:
         '''
         Sorts the table data by the col at the index `col_index`
         '''
+        if not isinstance(column_index, int):
+            raise TypeError('Excpected column_index to be an int, got '+type(column_index).__name__)
+        if not isinstance(reverse, bool):
+            raise TypeError('Excpected reverse to be a bool, got '+type(reverse).__name__)
+        
         self.sorted_row_indexes = []
 
         col_texts = []
@@ -810,6 +1096,19 @@ class Table:
         '''
         Creates a table from the data in the dict
         '''
+        if not isinstance(dict_of_content, dict):
+            raise TypeError('Excpected dict_of_content to be a dict, got '+type(dict_of_content).__name__)
+        if list(dict_of_content.keys()).sort() != ['title', 'header_row', 'first_column', 'values'].sort():
+            raise KeyError('Excpected dict_of_contents to have the keys: title, header_row, first_column, values')
+        if not isinstance(dict_of_content['title'], str):
+            raise TypeError('Excpected key "title" to be a str, got '+type(dict_of_content['title']).__name__)
+        if not isinstance(dict_of_content['header_row'], list) and not isinstance(dict_of_content['header_row'], tuple):
+            raise TypeError('Excpected key "header_row" to be a list, got '+type(dict_of_content['header_row']).__name__)
+        if not isinstance(dict_of_content['first_column'], list) and not isinstance(dict_of_content['first_column'], tuple):
+            raise TypeError('Excpected key "first_column" to be a list, got '+type(dict_of_content['first_column']).__name__)
+        if not isinstance(dict_of_content['values'], dict):
+            raise TypeError('Excpected key "title" to be a dict, got '+type(dict_of_content['values']).__name__)
+
         table = Table()
         table.set_title(dict_of_content['title'])
 
@@ -827,6 +1126,14 @@ class Table:
         '''
         Creates a table from the data in the list
         '''
+        if not isinstance(list_of_content, list):
+            raise TypeError('Excpected list_of_content to be a list, got '+type(list_of_content).__name__)
+        if not isinstance(list_of_content[0], str):
+            raise TypeError('Excpected index 0 of list_of_content to be a str, got '+type(list_of_content[0]).__name__)
+        for item in list_of_content[1:]:
+            if not isinstance(item, list) and not isinstance(item, tuple):
+                raise TypeError('Excpected index 1 and higher of list_of_content to be lists, got '+type(item).__name__)
+        
         table = Table()
         table.set_title(list_of_content[0])
 
@@ -857,6 +1164,14 @@ class Table:
         '''
         Creates a table from the data in the tuple
         '''
+        if not isinstance(tuple_of_content, tuple):
+            raise TypeError('Excpected tuple_of_content to be a tuple, got '+type(tuple_of_content).__name__)
+        if not isinstance(tuple_of_content[0], str):
+            raise TypeError('Excpected index 0 of tuple_of_content to be a str, got '+type(tuple_of_content[0]).__name__)
+        for item in tuple_of_content[1:]:
+            if not isinstance(item, list) and not isinstance(item, tuple):
+                raise TypeError('Excpected index 1 and higher of tuple_of_content to be lists, got '+type(item).__name__)
+            
         table = Table()
         table.set_title(tuple_of_content[0])
 
@@ -886,6 +1201,11 @@ class Table:
         '''
         Saves the table as markdown table in `filename`.md
         '''
+        if not isinstance(filename, str):
+            raise TypeError('Excpected filename to be a str, got '+type(filename).__name__)
+        if len(filename) == 0:
+            raise ValueError('Excpected filename to have a length of 1 or higher, not 0')
+
         md_header = [' ']
         for item in self.values.header_row:
             md_header.append(item[0])
@@ -919,6 +1239,11 @@ class Table:
         '''
         Saves the table as markdown table in `filename`.html
         '''
+        if not isinstance(filename, str):
+            raise TypeError('Excpected filename to be a str, got '+type(filename).__name__)
+        if len(filename) == 0:
+            raise ValueError('Excpected filename to have a length of 1 or higher, not 0')
+        
         html_header = [[' ', 'right']]
         for item in self.values.header_row:
             html_header.append([item[0], item[2]])
@@ -959,6 +1284,11 @@ class Table:
         '''
         Saves the table in the file .`filename`.table
         '''
+        if not isinstance(filename, str):
+            raise TypeError('Excpected filename to be a str, got '+type(filename).__name__)
+        if len(filename) == 0:
+            raise ValueError('Excpected filename to have a length of 1 or higher, not 0')
+
         if not pathlib.Path(f'.{filename}.table').exists():
             with open(f'.{filename}.table', 'w', encoding='utf-8') as file:
                 file.write(str(self.get_dict()))
@@ -975,6 +1305,10 @@ class Table:
         '''
         Loads the table from the file .`filename`.table
         '''
+        if not isinstance(filename, str):
+            raise TypeError('Excpected filename to be a str, got '+type(filename).__name__)
+        if len(filename) == 0:
+            raise ValueError('Excpected filename to have a length of 1 or higher, not 0')
         
         if pathlib.Path(f'.{filename}.table').exists():
             with open(f'.{filename}.table', 'r', encoding='utf-8') as file:

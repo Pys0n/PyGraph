@@ -363,7 +363,7 @@ Deletes the row at the index `index`.
 Returns the text align of the cell at the position (`row`, `column`).
 
 
-### .get_cell_with_text(text: str) -> tuple
+### .get_cell_with_text(text: str) -> tuple | None
 Returns a tuple with the position of the first cell with the text `text`. The tuple has the format (row, column).
 
 
@@ -718,6 +718,111 @@ There are 6 table styles:
 
 
 ## Direction()-class
+
+
+# Format Text with PyGraph
+
+## ColoredText()-class
+The `ColoredText()`-class contains items to print colored text to the terminal.
+
+The colors are:
+```python
+END       = '\33[0m'
+    
+BLACK     = '\33[30m'
+RED       = '\33[31m'
+GREEN     = '\33[32m'
+YELLOW    = '\33[33m'
+BLUE      = '\33[34m'
+VIOLET    = '\33[35m'
+BEIGE     = '\33[36m'
+WHITE     = '\33[37m'
+GREY      = '\33[90m'
+```
+
+`END` is the default terminal text color. You can use it to reset the color.
+
+You can use the colors with `ColoredText.COLOR`, like `ColoredText.RED` and `ColoredText.BLUE`.
+
+To print a red text, you can write:
+```python
+print(ColoredText.RED + 'This is my red text, it ends here ->' + ColoredText.END)
+``` 
+
+
+## ColoredBackground()-class
+The `ColoredBackground()`-class contains items to print text with colored background to the terminal.
+
+The background colors are:
+```python
+END       = '\033[0m'
+
+BLACK     = '\33[40m'
+RED       = '\33[41m'
+GREEN     = '\33[42m'
+YELLOW    = '\33[43m'
+BLUE      = '\33[44m'
+VIOLET    = '\33[45m'
+BEIGE     = '\33[46m'
+WHITE     = '\33[47m'
+GREY      = '\33[100m'
+```
+
+`END` is the default terminal text background color. You can use it to reset the background color.
+
+You can use the background colors with `ColoredBackground.COLOR`, like `ColoredBackground.RED` and `ColoredBackground.BLUE`.
+
+To print a text with a red background, you can write:
+```python
+print(ColoredBackground.RED + 'This is my text with red background, it ends here ->' + ColoredBackground.END)
+``` 
+
+
+## FormatedText()-class
+The `FormatedText()`-class contains items to print text with colored background to the terminal.
+
+The background colors are:
+```python
+END       = '\033[0m'
+
+BOLD      = '\33[1m'
+ITALIC    = '\33[3m'
+URL       = '\33[4m'
+BLINK     = '\33[5m'
+BLINK2    = '\33[6m'
+SELECTED  = '\33[7m'
+```
+
+`END` is the default terminal text style. You can use it to reset the text style.
+
+You can use the styles with `FormatedText.STYLE`, like `FormatedText.BOLD` and `FormatedText.ITALIC`.
+
+To print a bold text, you can write:
+```python
+print(FormatedText.BOLD + 'This is my bold text, it ends here ->' + FormatedText.END)
+```
+
+
+## TextAlign()-class
+The `TextAlign()`-class contains three strings saved in the variables `RIGHT`, `LEFT` and `CENTER`.
+
+The text in `RIGHT` is `'right'`.
+
+The text in `LEFT` is `'left'`.
+
+The text in `CENTER` is `'center'`.
+
+
+You can use this class to set the text align of a string, like with the string methods `.rjust()`, `.ljust()` and `.center()`.
+
+To set the text align of a string, use the `TextAlign.set_text_align()`-function.
+
+### .set_text_align(text: str, space: int, align: str, fill_char: str = ' ') -> str
+Sets the text align of the text in `text` to the align in `align`. The value of `align`
+needs to be a string (`'right'`, `'left'` or `'center'`), here you can use the `TextAlign()`-constants `RIGHT`, `LEFT` and `CENTER`.
+The value in `space` is the length of the final string, this means if the string is `'Hello'` and you set `align` to `'right'` and `space`
+is set to `10` the final string looks like `'     Hello'`. You can change the characters that are filled in (by default `' '`), by setting
+the value in `fill_char` to another value. If `fill_char` is set to `'-'` the final string would look like this: `'-----Hello'`.
 
 
 # Examples

@@ -40,6 +40,20 @@ class TextAlign:
     CENTER    = 'center'
 
     def set_text_align(text: str, space: int, align: str, fill_char: str = ' ') -> str:
+        '''
+        Sets the text align of an text
+        '''
+        if not isinstance(text, str):
+            raise TypeError('Excpected str, got '+type(text).__name__)
+        if not isinstance(space, int):
+            raise TypeError('Excpected int, got '+type(space).__name__)
+        if not isinstance(align, str):
+            raise TypeError('Excpected str, got '+type(align).__name__)
+        if not isinstance(fill_char, str):
+            raise TypeError('Excpected str, got '+type(fill_char).__name__)
+        if not isinstance(fill_char, str):
+            raise ValueError('Excpected str with a length of 1, got a length of '+len(fill_char))
+
         if align == TextAlign.RIGHT:
             return text.rjust(space, fill_char)
         elif align == TextAlign.LEFT:
