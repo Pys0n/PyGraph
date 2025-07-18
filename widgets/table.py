@@ -617,7 +617,7 @@ class Table:
             raise TypeError('Excpected values to be TableValues, got '+type(values).__name__)
         if not isinstance(style, TableStyle) and not isinstance(style, str):
             raise TypeError('Excpected style to be a TableStyle, got '+type(style).__name__)
-        if not isinstance(borderstyle, BorderStyle) and not isinstance(borderstyle, str):
+        if not isinstance(borderstyle, BorderStyle) and not isinstance(borderstyle, tuple):
             raise TypeError('Excpected borderstyle to be a BorderStyle, got '+type(borderstyle).__name__)
         if not isinstance(default_cell_length, int):
             raise TypeError('Excpected default_cell_length to be an int, got '+type(default_cell_length).__name__)
