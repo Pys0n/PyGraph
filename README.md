@@ -720,6 +720,53 @@ There are 6 table styles:
 ## Direction()-class
 
 
+# Create Geometric Elements with PyGraph
+
+## Rectangle()-class
+
+
+### .get_align() -> str
+
+
+### .get_border_char() -> str
+
+
+### .get_fill_char() -> str
+
+
+### .get_height() -> int
+
+
+### .get_str() -> str
+
+
+### .get_text() -> str
+
+
+### .get_width() -> int
+
+
+### .print() -> None
+
+
+### .set_align(align: TextAlign) -> None
+
+
+### .set_border_char(border_char: str) -> None
+
+
+### .set_fill_char(fill_char: str) -> None
+
+
+### .set_height(height: int) -> None
+
+
+### .set_text(text: str) -> None
+
+
+### .set_width(width: int) -> None
+
+
 # Format Text with PyGraph
 
 ## ColoredText()-class
