@@ -68,9 +68,9 @@ class TableValues:
         if not isinstance(first_column, list):
             raise TypeError('Excpected first_column to be a list, got '+type(first_column).__name__)
 
-        self.header_row: list[list[str, int, TextAlign]] = header_row
-        self.first_column: list[list[str, int, TextAlign]] = first_column
-        self.values: dict[tuple[int, int], list[str, int, TextAlign]] = {}
+        self.header_row: list[list[str, int, str]] = header_row
+        self.first_column: list[list[str, int, str]] = first_column
+        self.values: dict[tuple[int, int], list[str, int, str]] = {}
 
         self.align = TextAlign.RIGHT
         self.first_column_align = TextAlign.RIGHT
@@ -114,36 +114,36 @@ class TableValues:
         self.first_column = first_column
 
 
-    def set_first_column_align_at_position(self, pos: int, align: TextAlign) -> None:
+    def set_first_column_align_at_position(self, pos: int, align: str) -> None:
         '''
         Sets the align for an first column item
         '''
         if not isinstance(pos, int):
             raise TypeError('Excpected pos to be an int, got '+type(pos).__name__)
-        if not isinstance(align, TextAlign) and not isinstance(align, str):
-            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        if not isinstance(align, str):
+            raise TypeError('Excpected align to be a str, got '+type(align).__name__)
 
         self.first_column[pos][2] = align
 
 
-    def set_header_row_align_at_position(self, pos: int, align: TextAlign) -> None:
+    def set_header_row_align_at_position(self, pos: int, align: str) -> None:
         '''
         Sets the align for an header row item
         '''
         if not isinstance(pos, int):
             raise TypeError('Excpected pos to be an int, got '+type(pos).__name__)
-        if not isinstance(align, TextAlign) and not isinstance(align, str):
-            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        if not isinstance(align, str):
+            raise TypeError('Excpected align to be a str, got '+type(align).__name__)
         
         self.header_row[pos][2] = align
 
     
-    def set_first_column_align(self, align: TextAlign) -> None:
+    def set_first_column_align(self, align: str) -> None:
         '''
         Sets the align for the first column
         '''
-        if not isinstance(align, TextAlign) and not isinstance(align, str):
-            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        if not isinstance(align, str):
+            raise TypeError('Excpected align to be a str, got '+type(align).__name__)
         
         for i in range(len(self.first_column)):
             self.first_column[i][2] = align
@@ -151,12 +151,12 @@ class TableValues:
         self.first_column_align = align
 
 
-    def set_header_row_align(self, align: TextAlign) -> None:
+    def set_header_row_align(self, align: str) -> None:
         '''
         Sets the align for the header row
         '''
-        if not isinstance(align, TextAlign) and not isinstance(align, str):
-            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        if not isinstance(align, str):
+            raise TypeError('Excpected align to be a str, got '+type(align).__name__)
         
         for i in range(len(self.header_row)):
             self.header_row[i][2] = align
@@ -178,7 +178,7 @@ class TableValues:
         self.values[(row, column)] = [text, len(text), self.align]
 
     
-    def set_align_at_cell(self, row: int, column: int, align: TextAlign) -> None:
+    def set_align_at_cell(self, row: int, column: int, align: str) -> None:
         '''
         Sets the align of the cell at the position
         '''
@@ -186,18 +186,18 @@ class TableValues:
             raise TypeError('Excpected row to be an int, got '+type(row).__name__)
         if not isinstance(column, int):
             raise TypeError('Excpected column to be an int, got '+type(column).__name__)
-        if not isinstance(align, TextAlign) and not isinstance(align, str):
-            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        if not isinstance(align, str):
+            raise TypeError('Excpected align to be a str, got '+type(align).__name__)
         
         self.values[(row, column)][2] = align
     
     
-    def set_align(self, align: TextAlign) -> None:
+    def set_align(self, align: str) -> None:
         '''
         Sets the align of all cells
         '''
-        if not isinstance(align, TextAlign) and not isinstance(align, str):
-            raise TypeError('Excpected align to be a TextAlign, got '+type(align).__name__)
+        if not isinstance(align, str):
+            raise TypeError('Excpected align to be a str, got '+type(align).__name__)
         
         for col_index in range(len(self.first_column)):
             for row_index in range(len(self.header_row)):
@@ -243,7 +243,7 @@ class TableValues:
         return self.values[(row, column)][1]
 
 
-    def get_align_from_cell(self, row: int, column: int) -> TextAlign:
+    def get_align_from_cell(self, row: int, column: int) -> str:
         '''
         Returns the align of the cell at the position
         '''
@@ -606,7 +606,7 @@ class Table:
     Creates a new Table object.
     '''
 
-    def __init__(self, title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues(), style: TableStyle = TableStyle.DEFAULT, borderstyle: BorderStyle = BorderStyle.LIGHT, default_cell_length: int = 6, hide_title: bool = False) -> None:
+    def __init__(self, title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues(), style: str = TableStyle.DEFAULT, borderstyle: tuple[str] = BorderStyle.LIGHT, default_cell_length: int = 6, hide_title: bool = False) -> None:
         if not isinstance(title, str):
             raise TypeError('Excpected title to be a str, got '+type(title).__name__)
         if not isinstance(columns, int):
@@ -615,10 +615,12 @@ class Table:
             raise TypeError('Excpected rows to be an int, got '+type(rows).__name__)
         if not isinstance(values, TableValues):
             raise TypeError('Excpected values to be TableValues, got '+type(values).__name__)
-        if not isinstance(style, TableStyle) and not isinstance(style, str):
-            raise TypeError('Excpected style to be a TableStyle, got '+type(style).__name__)
-        if not isinstance(borderstyle, BorderStyle) and not isinstance(borderstyle, tuple):
-            raise TypeError('Excpected borderstyle to be a BorderStyle, got '+type(borderstyle).__name__)
+        if not isinstance(style, str):
+            raise TypeError('Excpected style to be a str, got '+type(style).__name__)
+        if not isinstance(borderstyle, list) and not isinstance(borderstyle, tuple):
+            raise TypeError('Excpected borderstyle to be a tuple, got '+type(borderstyle).__name__)
+        if len(borderstyle) != 11:
+            raise ValueError('Excpected borderstyle to have a length of 11, got '+str(len(borderstyle)))
         if not isinstance(default_cell_length, int):
             raise TypeError('Excpected default_cell_length to be an int, got '+type(default_cell_length).__name__)
         if default_cell_length <= 0:
@@ -630,8 +632,8 @@ class Table:
         self.columns: int = columns
         self.rows: int = rows
         self.values: TableValues = values
-        self.style: TableStyle = style
-        self.borderstyle: BorderStyle = borderstyle
+        self.style: str = style
+        self.borderstyle: tuple[str] = borderstyle
         self.default_cell_length: int = default_cell_length
         self.hide_title: bool = hide_title
         self.hidden_rows: list[tuple[int, int]] = []
@@ -744,22 +746,24 @@ class Table:
             self.values.first_column[i][0] = color + self.values.first_column[i][0] + color
 
 
-    def set_border_style(self, borderstyle: BorderStyle) -> None:
+    def set_border_style(self, borderstyle: tuple) -> None:
         '''
         Sets the style of the border
         '''
-        if not isinstance(borderstyle, BorderStyle) and not isinstance(borderstyle, tuple):
-            raise TypeError('Excpected borderstyle to be a BorderStyle, got '+type(borderstyle).__name__)
+        if not isinstance(borderstyle, list) and not isinstance(borderstyle, tuple):
+            raise TypeError('Excpected borderstyle to be a tuple, got '+type(borderstyle).__name__)
+        if len(borderstyle) != 11:
+            raise ValueError('Excpected borderstyle to have a length of 11, got '+str(len(borderstyle)))
 
         self.borderstyle = borderstyle
 
 
-    def set_style(self, style: TableStyle) -> None:
+    def set_style(self, style: str) -> None:
         '''
         Sets the style of the table
         '''
-        if not isinstance(style, TableStyle) and not isinstance(style, tuple):
-            raise TypeError('Excpected style to be a TableStyle, got '+type(borderstyle).__name__)
+        if not isinstance(style, str):
+            raise TypeError('Excpected style to be a str, got '+type(style).__name__)
         
         self.style = style
 
