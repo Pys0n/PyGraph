@@ -723,48 +723,166 @@ There are 6 table styles:
 # Create Geometric Elements with PyGraph
 
 ## Rectangle()-class
+Takes two arguments and four optional arguments.
+
+- `width: int` - sets the width of the rectangle
+- `height: int` - sets the height of the rectangle
+- `border_chars: tuple[str] = ('#', '#', '#', '#', '#', '#')`  - sets the border of the rectangle
+- `fill_char: str = ' '` - sets the character to fill the rectangle
+- `text: str = ''` - sets the text of the rectangle
+- `align: str = TextAlign.LEFT` - sets the text align of the text in the rectangle
 
 
 ### .get_align() -> str
+Returns the align of the text in the rectangle as string (`'right'`, `'left'` and `'center'`).
 
 
-### .get_border_char() -> str
+### .get_border_chars() -> tuple
+Returns the characters or symbols of the border of the rectangle as string.
+
+The tuple consists of:
+- a horizontal line at index 0
+- a vertical line at index 1
+- a top-left corner at index 2
+- a top-right corner line at index 3
+- a bottom-left corner line at index 4
+- a bottom-right corner line at index 5
 
 
 ### .get_fill_char() -> str
+Returns the character or symbol which fills the rectangle.
 
 
 ### .get_height() -> int
+Returns the height of the rectangle as int. 
 
 
 ### .get_str() -> str
+Returns the rectangle as multiline string.
 
 
 ### .get_text() -> str
+Returns the text of the Rectangle.
 
 
 ### .get_width() -> int
+Returns the width of the rectangle as int. 
 
 
 ### .print() -> None
+Prints the rectangle to the terminal.
 
 
 ### .set_align(align: TextAlign) -> None
+Sets the align of the text in the rectangle to the align in `align`.
 
 
-### .set_border_char(border_char: str) -> None
+### .set_border_chars(border_chars: tuple) -> None
+Sets the border chars of the rectangle to the border chars in `border_chars`.
+
+`border_charts` needs to consists of:
+- a horizontal line at index 0
+- a vertical line at index 1
+- a top-left corner at index 2
+- a top-right corner line at index 3
+- a bottom-left corner line at index 4
+- a bottom-right corner line at index 5
 
 
 ### .set_fill_char(fill_char: str) -> None
+Sets the character or symbol with which the rectangle gets filled to `fill_char`.
 
 
 ### .set_height(height: int) -> None
+Sets the height of the rectangle to the value in `height`.
 
 
 ### .set_text(text: str) -> None
+Sets the text of the rectangle to the value in `text`.
+
+Newlines in the string are ignored.
 
 
 ### .set_width(width: int) -> None
+Sets the width of the rectangle to the value in `width`.
+
+
+## RectangleBorder()-class
+There are 13 default border styles:
+
+**INFO:** In your terminal are no gaps between the parts of the table (the distance between two lines is 0)
+
+`RectangleBorder.ASCII`:
+```
++------+
+|      |
++------+
+```
+
+`RectangleBorder.BASIC`:
+```
++——————+
+|      |
++——————+
+```
+
+`RectangleBorder.DOUBLE`:
+```
+╔══════╗
+║      ║
+╚══════╝
+```
+
+`RectangleBorder.HEAVY`:
+```
+┏━━━━━━┓
+┃      ┃
+┗━━━━━━┛
+```
+
+`RectangleBorder.HEAVY_DASHED`:
+```
+┏╍╍╍╍╍╍┓
+┋      ┋
+┗╍╍╍╍╍╍┛
+```
+
+`RectangleBorder.LIGHT` (default):
+```
+┌──────┐
+│      │
+└──────┘
+```
+
+`RectangleBorder.LIGHT_ARC`:
+```
+╭──────╮
+│      │
+╰──────╯
+```
+
+`RectangleBorder.LIGHT_DASHED`:
+```
+┌╌╌╌╌╌╌┐
+┊      ┊
+└╌╌╌╌╌╌┘
+```
+
+`RectangleBorder.NO_BORDER`:
+```
+
+
+
+```
+;-)
+
+
+### .create_style(name: str, horizontal_line: str, vertical_line: str, upper_left_corner: str, upper_right_corner: str, lower_left_corner: str, lower_right_corner: str) -> None
+Creates a style with the characters in `horizontal_line`, `vertical_line`, `upper_left_corner`, `upper_right_corner`, `lower_left_corner` and `lower_right_corner` as horizontal line, vertical line, upper-left corner, upper-right corner, lower-left corner and lower-right corner.
+
+
+### .create_style_from_tuple(name: str, style: tuple) -> None
+Creates a style from a tuple. The items in the tuple from index 0 to index 5 are the horizontal line, the vertical line, the upper-left corner, the upper-right corner, the lower-left corner and the lower-right corner.
 
 
 # Format Text with PyGraph
@@ -870,6 +988,39 @@ needs to be a string (`'right'`, `'left'` or `'center'`), here you can use the `
 The value in `space` is the length of the final string, this means if the string is `'Hello'` and you set `align` to `'right'` and `space`
 is set to `10` the final string looks like `'     Hello'`. You can change the characters that are filled in (by default `' '`), by setting
 the value in `fill_char` to another value. If `fill_char` is set to `'-'` the final string would look like this: `'-----Hello'`.
+
+
+## Other Functions
+
+### make_text_horizontal(text: str) -> str
+Returns the text as multiline string, in which the text is written horizontal:
+
+```python
+>>> make_text_horizontal('Some Cool Text')
+S
+o
+m
+e
+
+C
+o
+o
+l
+
+T
+e
+x
+t
+```
+
+
+### make_text_backwards(text: str) -> str
+Returns the text, but written backwards:
+
+```python
+>>> make_text_backwards('Some Cool Text')
+txeT looC emoS
+```
 
 
 # Examples
