@@ -201,7 +201,7 @@ class Rectangle:
         return self.align
 
 
-    def print(self):
+    def draw(self):
         '''
         Prints the rectangle to the terminal
         '''
@@ -269,3 +269,170 @@ class Rectangle:
         rectangle += self.border_chars[4] + self.border_chars[1] * (self.width-2) + self.border_chars[5]
 
         return rectangle
+    
+
+
+class Line:
+    def __init__(self, startx: int, starty: int, endx: int, endy: int, *, symbol: str = '#') -> None:
+        '''
+        Creates a straight line in the terminal
+        '''
+        if not isinstance(startx, int):
+            raise TypeError('Excpected startx to be an int, got '+type(startx).__name__)
+        if not isinstance(starty, int):
+            raise TypeError('Excpected starty to be an int, got '+type(starty).__name__)
+        if not isinstance(endx, int):
+            raise TypeError('Excpected endx to be an int, got '+type(endx).__name__)
+        if not isinstance(endy, int):
+            raise TypeError('Excpected endy to be an int, got '+type(endy).__name__)
+        if not isinstance(symbol, str):
+            raise TypeError('Excpected symbol to be an str, got '+type(symbol).__name__)
+        if len(symbol) != 1:
+            raise ValueError('Excpected symbol to have a length of 1, got '+str(len(symbol)))   
+
+        self.startx: int = startx
+        self.starty: int = starty
+        self.endx: int = endx
+        self.endy: int = endy
+        self.symbol: str = symbol
+
+
+    def get_start_pos(self) -> tuple[int]:
+        '''
+        Returns the start position as tuple
+        '''
+        return (self.startx, self.starty)
+    
+
+    def get_end_pos(self) -> tuple[int]:
+        '''
+        Returns the end position as tuple
+        '''
+        return (self.endx, self.endy)
+    
+
+    def get_symbol(self) -> str:
+        '''
+        Returns the symbol of the line
+        '''
+        return self.symbol
+    
+
+    def get_gradient(self) -> float:
+        '''
+        Returns the gradient of the line
+        Returns None if the angle is 90°
+        '''
+        try:
+            return (self.endy-self.starty)/(self.endx-self.startx)
+        except ZeroDivisionError:
+            return None
+
+
+    def set_start_pos(self, startx: int, starty: int) -> None:
+        '''
+        Sets the start position to (startx, starty)
+        '''
+        if not isinstance(startx, int):
+            raise TypeError('Excpected startx to be an int, got '+type(startx).__name__)
+        if not isinstance(starty, int):
+            raise TypeError('Excpected starty to be an int, got '+type(starty).__name__)
+
+        self.startx = startx
+        self.starty = starty
+    
+
+    def set_end_pos(self, endx: int, endy: int) -> None:
+        '''
+        Sets the end position to (endx, endy)
+        '''
+        if not isinstance(endx, int):
+            raise TypeError('Excpected endx to be an int, got '+type(endx).__name__)
+        if not isinstance(endy, int):
+            raise TypeError('Excpected endy to be an int, got '+type(endy).__name__)
+
+        self.endx = endx
+        self.endy = endy
+    
+
+    def set_symbol(self, symbol: str) -> None:
+        '''
+        Sets the symbol of the line
+        '''
+        if not isinstance(symbol, str):
+            raise TypeError('Excpected symbol to be an str, got '+type(symbol).__name__)
+        if len(symbol) != 1:
+            raise ValueError('Excpected symbol to have a length of 1, got '+str(len(symbol))) 
+          
+        self.symbol = symbol
+
+    
+    def draw(self) -> None:
+        '''
+        Prints the line to the terminal
+        '''
+        print(self.get_str())
+
+
+    def get_str(self) -> str:
+        '''
+        Returns the line as multiline string
+        '''
+        return str(self)
+
+
+    def __str__(self) -> str:
+        try:
+            m = (self.endy-self.starty)/(self.endx-self.startx)
+        except ZeroDivisionError:
+            m = '90'
+        
+        if self.endx < self.startx:
+            endx, startx = self.startx, self.endx
+        else:
+            endx, startx = self.endx, self.startx
+
+        if self.endy < self.starty:
+            endy, starty = self.starty, self.endy
+        else:
+            endy, starty = self.endy, self.starty
+
+        line = []
+
+        lines = max(starty, endy)+1 + (0 if min(starty, endy) >= 0 else abs(min(starty, endy)))
+
+        for _ in range(lines):
+            if min(startx, endx) < 0:
+                line.append([' ']*(max(startx, endx)+abs(min(startx, endx))+1))
+            else:
+                line.append([' ']*(max(startx, endx)+1))
+
+        line[starty][startx] = self.symbol
+        line[endy][endx] = self.symbol
+
+        x = startx
+        y = starty
+        while x < endx or y < endy:
+            if m != '90':
+                x += 1
+                y += m
+                if len(line)-1 < int(y):
+                    break
+                line[int(y)][x] = self.symbol
+            else:
+                y += 1
+                if len(line)-1 < int(y):
+                    break
+                line[int(y)][x] = self.symbol
+
+
+        for i, row in enumerate(line):
+            if not self.symbol in row and i != 0 and i > starty:
+                line[i] = line[i-1] 
+
+        line_str = ''
+
+        for row in line:
+            line_str += ''.join(row) + '\n'
+
+        return line_str[:len(line_str)-1]

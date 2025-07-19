@@ -733,6 +733,10 @@ Takes two arguments and four optional arguments.
 - `align: str = TextAlign.LEFT` - sets the text align of the text in the rectangle
 
 
+### .draw() -> None
+Prints the rectangle to the terminal.
+
+
 ### .get_align() -> str
 Returns the align of the text in the rectangle as string (`'right'`, `'left'` and `'center'`).
 
@@ -767,10 +771,6 @@ Returns the text of the Rectangle.
 
 ### .get_width() -> int
 Returns the width of the rectangle as int. 
-
-
-### .print() -> None
-Prints the rectangle to the terminal.
 
 
 ### .set_align(align: TextAlign) -> None
@@ -883,6 +883,52 @@ Creates a style with the characters in `horizontal_line`, `vertical_line`, `uppe
 
 ### .create_style_from_tuple(name: str, style: tuple) -> None
 Creates a style from a tuple. The items in the tuple from index 0 to index 5 are the horizontal line, the vertical line, the upper-left corner, the upper-right corner, the lower-left corner and the lower-right corner.
+
+
+## Line()-class
+Takes four arguments and one optional argument.
+
+- `startx: int` - sets the starting x position of the line
+- `starty: int` - sets the starting y position of the line
+- `endx: int` - sets the ending x position of the line
+- `endy: int` - sets the ending y position of the line
+- `symbol: str = '#'` - sets the symbol of the line to a single character
+
+
+### .draw() -> None
+Prints the line to the terminal.
+
+
+### .get_end_pos() -> tuple
+Returns the ending position of the line as tuple with the format (x, y).
+
+
+### .get_gradient() -> float
+Returns the gradient of the line as float.
+
+
+### .get_start_pos() -> tuple
+Returns the starting position of the line as tuple with the format (x, y).
+
+
+### .get_str() -> str
+Returns the line as string.
+
+
+### .get_symbol() -> str
+Returns the symbol the line is made of.
+
+
+### .set_end_pos(endx: int, endy: int) -> None
+Sets the ending position of the line to (`endx`, `endy`).
+
+
+### .set_start_pos(startx: int, starty: int) -> None
+Sets the starting position of the line to (`startx`, `starty`).
+
+
+### .set_symbol(symbol: str) -> None
+Sets the symbol of the line to the single character or symbol in `symbol`.
 
 
 # Format Text with PyGraph
