@@ -11,6 +11,7 @@ class ColoredText:
     WHITE     = '\33[37m'
     GREY      = '\33[90m'
 
+
 class ColoredBackground:
     END       = '\033[0m'
 
@@ -24,6 +25,7 @@ class ColoredBackground:
     WHITE     = '\33[47m'
     GREY      = '\33[100m'
 
+
 class FormatedText:
     END       = '\033[0m'
 
@@ -33,6 +35,7 @@ class FormatedText:
     BLINK     = '\33[5m'
     BLINK2    = '\33[6m'
     SELECTED  = '\33[7m'
+
 
 class TextAlign:
     RIGHT     = 'right'
@@ -60,3 +63,13 @@ class TextAlign:
             return text.ljust(space, fill_char)
         elif align == TextAlign.CENTER:
             return text.center(space, fill_char)
+        
+
+def make_text_horizontal(text: str) -> str:
+    return '\n'.join(list(text))
+
+
+def make_text_backwards(text: str) -> str:
+    text_list = list(text)
+    text_list.reverse()
+    return ''.join(text_list)
