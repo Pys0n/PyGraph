@@ -6,7 +6,7 @@
 You can use the `Table()`-class to create tables in different designs and with a lot of features. They make it easier to add some cool stuff to your table.
 
 The `Table()`-class has 8 optional arguments: 
-`title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues(), style: TableStyle = TableStyle.DEFAULT, borderstyle: BorderStyle = BorderStyle.LIGHT, default_cell_length: int = 6, hide_title: bool = False`
+`title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues(), style: list[str] = [TableStyle.DEFAULT], borderstyle: str = BorderStyle.LIGHT, default_cell_length: int = 6, hide_title: bool = False`
 
 `title: str` - The title of your table, it's printed in bold above your table.
 
@@ -18,7 +18,7 @@ The `Table()`-class has 8 optional arguments:
 
 `style: TableStyle` - The style of your table as `str` or easier `TableStyle.YOURSTYLE`, e.g. `TableStyle.DEFAULT`.
 
-`borderstyle: BorderStyle` - The style of the border as `str` or easier `BorderStyle.YOURSTYLE`, e.g. `BorderStyle.ASCII` or `BorderStyle.LIGHT_ARC`.
+`borderstyle: str` - The style of the border as `str` or easier `BorderStyle.YOURSTYLE`, e.g. `BorderStyle.ASCII` or `BorderStyle.LIGHT_ARC`.
 
 `default_cell_length: int` - The length of the cell if no celltext is longer as `default_cell_length`.
 
@@ -275,10 +275,10 @@ The general style of the table itself you can change with the `TableStyle()`-cla
 ### .save_in_file(filename: str = 'Table') -> None
 Saves the table in the file ".`filename`.table". `filename` is by default "Table". The title, the header row, first column and the values are saved in this file. The text aligns are also saved there. The program uses it's `.get_dict()`-functions to create and save the dictionary in this file.
 
-### .set_border_style(borderstyle: BorderStyle) -> None
+### .set_border_style(borderstyle: str) -> None
 Sets the border style of the border of the table. The border styles are saved in the `BorderStyle()`-class. You can choose one of the existing styles like `BorderStyle.LIGHT_ARC`. But you can also create your own styles with `BorderStyle.create_style()` or `BorderStyle.create_style_from_tuple()`. If you want to see the border styles, go to the BorderStyle()-class explanation.
 
-### .set_cell_color(row: int, column: int, color: ColoredText) -> None
+### .set_cell_color(row: int, column: int, color: str) -> None
 Sets the color of the text at the cell to the color in `color`. `color` has as value a string saved in the `ColoredText()`-class, this means you can set color to e.g. `ColoredText.RED`.
 
 ### .set_columns(columns: int) -> None
@@ -287,10 +287,10 @@ Sets the number of columns your table has to the number in `columns`. In the mos
 ### .set_default_cell_length(default_cell_length: int) -> None
 Sets the default cell length to the value in `default_cell_length`. If one cell text length is higher than the value in `default_cell_length` the bigger one is taken. But if no cell text is longer then `default_cell_length` the value in `default_cell_length` is used. The default cell length is by default 6.
 
-### .set_first_column_color(color: ColoredText) -> None
+### .set_first_column_color(color: str) -> None
 Sets the color of all texts in the first column to the color in `color`. `color` has as value a string saved in the `ColoredText()`-class, this means you can set color to e.g. `ColoredText.RED`.
 
-### .set_header_row_color(color: ColoredText) -> None
+### .set_header_row_color(color: str) -> None
 Sets the color of all texts in the header row to the color in `color`. `color` has as value a string saved in the `ColoredText()`-class, this means you can set color to e.g. `ColoredText.RED`.
 
 ### .set_hide_title(hide_title: bool) -> None
@@ -299,8 +299,15 @@ Hides the title if `hide_title` is `True`, otherwise it shows the title.
 ### .set_rows(rows: int) -> None
 Sets the number of rows your table has to the number in `rows`. In the most cases, you don't need to to set this value by hand.
 
-### .set_style(style: TableStyle) -> None
+### .set_style(style: str) -> None
 Sets the general style of the table. You set the style with e.g `TableStyle.DEFAULT`. To see all table styles go to the TableStyle()-class explanation.
+
+This function overwrites the styles set before.
+
+### .set_styles(styles: list) -> None
+Sets the general styles of the table to the styles in `styles`. You set the style with e.g `TableStyle.DEFAULT`. To see all table styles go to the TableStyle()-class explanation.
+
+This function overwrites the styles set before.
 
 ### .set_title(title: str) -> None
 Sets the title of your table to the string in `title`. You can hide or show the title with `.set_hide_title(True)` and `.set_hide_title(False)`.
@@ -1186,3 +1193,237 @@ txeT looC emoS
 
 
 # Examples
+
+## Table()-class
+
+### Table to show all products from 1\*1 to 10\*10
+
+```python
+from widgets.table import Table, TableValues
+
+table = Table('1*1 - 10*10')        # Create a Table()-object
+
+values = TableValues()              # Create a TableValues()-object
+values.set_header_row(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])      # Set the header row of the TableValues()-object
+values.set_first_column(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])    # Set the first column of the TableValues()-object
+for col in range(10):
+    for row in range(10):
+        values.set_text_at_cell(row, col, str( (row+1) * (col+1) ))             # Set all cell texts from (0, 0) to (9, 9) to the products of 1*1 to 10*10
+
+table.set_values(values)            # Set the table's values to the TableValues()-object
+
+table.print()                       # Print the table to the terminal
+```
+
+
+If you run this code you will see this table in your terminal:
+
+```
+                                 1*1 - 10*10                                  
+
+┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
+│      │     1│     2│     3│     4│     5│     6│     7│     8│     9│    10│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     1│     1│     2│     3│     4│     5│     6│     7│     8│     9│    10│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     2│     2│     4│     6│     8│    10│    12│    14│    16│    18│    20│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     3│     3│     6│     9│    12│    15│    18│    21│    24│    27│    30│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     4│     4│     8│    12│    16│    20│    24│    28│    32│    36│    40│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     5│     5│    10│    15│    20│    25│    30│    35│    40│    45│    50│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     6│     6│    12│    18│    24│    30│    36│    42│    48│    54│    60│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     7│     7│    14│    21│    28│    35│    42│    49│    56│    63│    70│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     8│     8│    16│    24│    32│    40│    48│    56│    64│    72│    80│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│     9│     9│    18│    27│    36│    45│    54│    63│    72│    81│    90│
+├──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│    10│    10│    20│    30│    40│    50│    60│    70│    80│    90│   100│
+└──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
+```
+
+
+### Table to show the money spend in this month
+
+```python
+from widgets.table import Table, TableValues, TableStyle
+from widgets.text import TextAlign
+
+table = Table('money spend in this month')          # Create a Table()-object
+
+values = TableValues()                              # Create a TableValues()-object
+values.set_header_row(['Date', 'Bought Object', 'Price in €'])  # Set header row of table values
+values.add_row('', ['09.01.2025', 'Computer', '2035'])          # Add a row to the table values
+values.add_row('', ['10.01.2025', 'Fridge', '799'])             # Add a row to the table values
+values.add_row('', ['18.01.2025', 'Pencil', '1'])               # Add a row to the table values
+values.add_row('', ['21.01.2025', 'Fridge', '899'])             # Add a row to the table values
+values.add_row('', ['23.01.2025', 'Car', '100000'])             # Add a row to the table values
+
+values.set_align(TextAlign.CENTER)                  # Set the text align to center
+values.set_header_row_align(TextAlign.CENTER)       # Set the header row text align to center
+
+table.set_values(values)                            # Set the tables values to the TableValues()-object
+table.set_style(TableStyle.WITHOUT_FIRST_COLUMN)    # Hide first column (we don't want a first column in this table)
+table.show_sum_row([2])                             # Show a sum row with the sum of all values in the third column (third column has index 2)
+
+table.print()                                       # Print the table to the terminal
+```
+
+
+If you run this code you will see this table in your terminal:
+
+```
+        Money Spend In This Month                              
+
+┌─────────────┬─────────────┬─────────────┐
+│     Date    │Bought Object│  Price in € │
+├─────────────┼─────────────┼─────────────┤
+│  09.01.2025 │   Computer  │     2035    │
+├─────────────┼─────────────┼─────────────┤
+│  10.01.2025 │    Fridge   │     799     │
+├─────────────┼─────────────┼─────────────┤
+│  18.01.2025 │    Pencil   │      1      │
+├─────────────┼─────────────┼─────────────┤
+│  21.01.2025 │    Fridge   │     899     │
+├─────────────┼─────────────┼─────────────┤
+│  23.01.2025 │     Car     │    100000   │
+├─────────────┼─────────────┼─────────────┤
+│             │             │   103734.0  │
+└─────────────┴─────────────┴─────────────┘
+```
+
+
+### A TicTacToe game
+
+```python
+from widgets.table import Table, TableValues, TableStyle
+from widgets.text import TextAlign
+
+tictactoe = Table()                     # Create a table
+
+values = TableValues()                  # Create table values
+values.set_header_row(['', '', ''])     # Create an empty header row
+values.add_row('', [' ', ' ', ' '])     # Create an empty row
+values.add_row('', [' ', ' ', ' '])     # Create an empty row
+values.add_row('', [' ', ' ', ' '])     # Create an empty row
+
+values.set_align(TextAlign.CENTER)      # Set the text align of all values to center
+
+tictactoe.set_values(values)            # Set the tables values to the TableValues()-object
+tictactoe.set_styles([TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW, TableStyle.WITHOUT_BORDER])   # Set the table styles
+
+tictactoe.set_hide_title(True)          # Hide the tables title
+
+turn = 'X'                              # Set the player symbol of the player which begins to "X"
+for _ in range(9):                      # Play 9 rounds at most
+    
+    tictactoe.print()                   # Print the tic tac toe board
+
+    field = int(input('Enter a field (1-9): '))     # Enter the field you want to play (1-9)
+
+    tictactoe.get_values().set_text_at_cell((field-1)//3, (field-1)%3, turn)    # Set your symbol at the field you want to play
+
+    # Check if someone won (horizontal)
+    if tictactoe.get_values().get_text_from_cell(0,0) == tictactoe.get_values().get_text_from_cell(0,1) == tictactoe.get_values().get_text_from_cell(0,2) != ' ' or \
+        tictactoe.get_values().get_text_from_cell(1,0) == tictactoe.get_values().get_text_from_cell(1,1) == tictactoe.get_values().get_text_from_cell(1,2) != ' ' or \
+        tictactoe.get_values().get_text_from_cell(2,0) == tictactoe.get_values().get_text_from_cell(2,1) == tictactoe.get_values().get_text_from_cell(2,2) != ' ':
+        break
+    
+    # Check if someone won (vertical)
+    elif tictactoe.get_values().get_text_from_cell(0,0) == tictactoe.get_values().get_text_from_cell(1,0) == tictactoe.get_values().get_text_from_cell(2,0) != ' ' or \
+        tictactoe.get_values().get_text_from_cell(0,1) == tictactoe.get_values().get_text_from_cell(1,1) == tictactoe.get_values().get_text_from_cell(2,1) != ' ' or \
+        tictactoe.get_values().get_text_from_cell(0,2) == tictactoe.get_values().get_text_from_cell(1,2) == tictactoe.get_values().get_text_from_cell(2,2) != ' ':
+        break
+    
+    # Check if someone won (diagonal)
+    elif tictactoe.get_values().get_text_from_cell(0,0) == tictactoe.get_values().get_text_from_cell(1,1) == tictactoe.get_values().get_text_from_cell(2,2) != ' ' or \
+        tictactoe.get_values().get_text_from_cell(0,2) == tictactoe.get_values().get_text_from_cell(1,1) == tictactoe.get_values().get_text_from_cell(2,0) != ' ':
+        break
+
+
+    # Change the turn
+    if turn == 'X':
+        turn = 'O'
+    else:
+        turn = 'X'
+
+
+tictactoe.print()   # If the game is over, print the final board
+
+```
+
+
+If you run this code you will see a tic tac toe game in your terminal, that you can play with your friends:
+
+```
+      │      │      
+──────┼──────┼──────
+      │      │      
+──────┼──────┼──────
+      │      │      
+
+Enter a field (1-9): 2
+      │  X   │      
+──────┼──────┼──────
+      │      │      
+──────┼──────┼──────
+      │      │      
+
+Enter a field (1-9): 7
+      │  X   │      
+──────┼──────┼──────
+      │      │      
+──────┼──────┼──────
+  O   │      │      
+
+Enter a field (1-9): 6
+      │  X   │      
+──────┼──────┼──────
+      │      │  X   
+──────┼──────┼──────
+  O   │      │      
+
+Enter a field (1-9): 5
+      │  X   │      
+──────┼──────┼──────
+      │  O   │  X   
+──────┼──────┼──────
+  O   │      │      
+
+Enter a field (1-9): 3
+      │  X   │  X   
+──────┼──────┼──────
+      │  O   │  X   
+──────┼──────┼──────
+  O   │      │      
+
+Enter a field (1-9): 1
+  O   │  X   │  X   
+──────┼──────┼──────
+      │  O   │  X   
+──────┼──────┼──────
+  O   │      │      
+
+Enter a field (1-9): 9
+  O   │  X   │  X   
+──────┼──────┼──────
+      │  O   │  X   
+──────┼──────┼──────
+  O   │      │  X   
+```
+
+
+## 
+
+
+
+
+
+
+
+
+
