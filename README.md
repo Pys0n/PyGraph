@@ -1317,6 +1317,7 @@ tictactoe.set_values(values)            # Set the tables values to the TableValu
 tictactoe.set_styles([TableStyle.WITHOUT_FIRST_COLUMN, TableStyle.WITHOUT_HEADER_ROW, TableStyle.WITHOUT_BORDER])   # Set the table styles
 
 tictactoe.set_hide_title(True)          # Hide the tables title
+tictactoe.set_default_cell_length(3)    # Make the fields smaller
 
 turn = 'X'                              # Set the player symbol of the player which begins to "X"
 for _ in range(9):                      # Play 9 rounds at most
@@ -1360,60 +1361,60 @@ tictactoe.print()   # If the game is over, print the final board
 If you run this code you will see a tic tac toe game in your terminal, that you can play with your friends:
 
 ```
-      │      │      
-──────┼──────┼──────
-      │      │      
-──────┼──────┼──────
-      │      │      
+   │   │   
+───┼───┼───
+   │   │   
+───┼───┼───
+   │   │   
 
 Enter a field (1-9): 2
-      │  X   │      
-──────┼──────┼──────
-      │      │      
-──────┼──────┼──────
-      │      │      
+   │ X │   
+───┼───┼───
+   │   │   
+───┼───┼───
+   │   │   
 
 Enter a field (1-9): 7
-      │  X   │      
-──────┼──────┼──────
-      │      │      
-──────┼──────┼──────
-  O   │      │      
+   │ X │   
+───┼───┼───
+   │   │   
+───┼───┼───
+ O │   │   
 
 Enter a field (1-9): 6
-      │  X   │      
-──────┼──────┼──────
-      │      │  X   
-──────┼──────┼──────
-  O   │      │      
+   │ X │   
+───┼───┼───
+   │   │ X 
+───┼───┼───
+ O │   │   
 
 Enter a field (1-9): 5
-      │  X   │      
-──────┼──────┼──────
-      │  O   │  X   
-──────┼──────┼──────
-  O   │      │      
+   │ X │   
+───┼───┼───
+   │ O │ X 
+───┼───┼───
+ O │   │   
 
 Enter a field (1-9): 3
-      │  X   │  X   
-──────┼──────┼──────
-      │  O   │  X   
-──────┼──────┼──────
-  O   │      │      
+   │ X │ X 
+───┼───┼───
+   │ O │ X 
+───┼───┼───
+ O │   │   
 
 Enter a field (1-9): 1
-  O   │  X   │  X   
-──────┼──────┼──────
-      │  O   │  X   
-──────┼──────┼──────
-  O   │      │      
+ O │ X │ X 
+───┼───┼───
+   │ O │ X 
+───┼───┼───
+ O │   │   
 
 Enter a field (1-9): 9
-  O   │  X   │  X   
-──────┼──────┼──────
-      │  O   │  X   
-──────┼──────┼──────
-  O   │      │  X   
+ O │ X │ X 
+───┼───┼───
+   │ O │ X 
+───┼───┼───
+ O │   │ X 
 ```
 
 
