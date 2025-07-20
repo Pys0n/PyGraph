@@ -86,6 +86,14 @@ class Rectangle:
         self.align: str = align
 
 
+    def copy(self) -> any:
+        '''
+        Returns a copy of this rectangle
+        '''
+        rect = Rectangle(self.width, self.height, border_chars=self.border_chars, fill_char=self.fill_char, text=self.text, align=self.align)
+        return rect
+
+
     def set_width(self, width: int) -> None:
         '''
         Sets the width of the rectangle to the value of width
@@ -297,6 +305,14 @@ class Line:
         self.symbol: str = symbol
 
 
+    def copy(self) -> any:
+        '''
+        Returns a copy of this line
+        '''
+        line = Line(self.startx, self.starty, self.endx, self.endy, symbol=self.symbol)
+        return line
+
+
     def get_start_pos(self) -> tuple[int]:
         '''
         Returns the start position as tuple
@@ -387,10 +403,7 @@ class Line:
         except ZeroDivisionError:
             m = '90'
         
-        if self.endx < self.startx:
-            endx, startx = self.startx, self.endx
-        else:
-            endx, startx = self.endx, self.startx
+        endx, startx = self.endx, self.startx
 
         if self.endy < self.starty:
             endy, starty = self.starty, self.endy
@@ -416,12 +429,12 @@ class Line:
             if m != '90':
                 x += 1
                 y += m
-                if len(line)-1 < int(y):
+                if len(line)-1 < int(y) or len(line[int(y)])-1 < x or x < 0 or y < 0:
                     break
                 line[int(y)][x] = self.symbol
             else:
                 y += 1
-                if len(line)-1 < int(y):
+                if len(line)-1 < int(y) or len(line[int(y)])-1 < x or x < 0 or y < 0:
                     break
                 line[int(y)][x] = self.symbol
 
