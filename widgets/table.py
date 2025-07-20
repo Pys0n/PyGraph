@@ -1480,7 +1480,7 @@ class Table:
                 else:
                     table += '\n'
 
-        return table
+        return table + FormatedText.END
     
 
     def copy(self) -> any:
