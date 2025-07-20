@@ -1496,6 +1496,8 @@ class Table:
                         text = TextAlign.set_text_align(text, longest_row_length, self.values.get_align_from_cell(print_row//2, x))
                         if TableStyle.WITHOUT_BORDER in self.style and x == 0:
                             table += text
+                        elif TableStyle.WITHOUT_BORDER in self.style and x != 0:
+                            table += self.borderstyle[1] + text
                         elif TableStyle.ONLY_BORDER in self.style and x == 0:
                             table += self.borderstyle[1] + text
                         else:
