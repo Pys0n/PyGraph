@@ -732,6 +732,9 @@ Takes two arguments and four optional arguments.
 - `text: str = ''` - sets the text of the rectangle
 - `align: str = TextAlign.LEFT` - sets the text align of the text in the rectangle
 
+### .copy() -> Rectangle
+Creates a copy of this object and returns it.
+
 
 ### .draw() -> None
 Prints the rectangle to the terminal.
@@ -894,6 +897,9 @@ Takes four arguments and one optional argument.
 - `endy: int` - sets the ending y position of the line
 - `symbol: str = '#'` - sets the symbol of the line to a single character
 
+### .copy() -> Line
+Creates a copy of this object and returns it.
+
 
 ### .draw() -> None
 Prints the line to the terminal.
@@ -929,6 +935,116 @@ Sets the starting position of the line to (`startx`, `starty`).
 
 ### .set_symbol(symbol: str) -> None
 Sets the symbol of the line to the single character or symbol in `symbol`.
+
+
+# Create Texts with PyGraph
+
+## Text()-class
+The Text()-class takes one argument and three optional arguments:
+
+- `text: str` - The text of this object
+- `width: int = -1` - The width of the formated text (-1 means "take the length of the text")
+- `height: int = 1` - The height of the formated text
+- `optimal_height: bool = True` - If set to True, `height` is ignored and the optimal height for the text is chosen
+
+
+### .copy() -> Text
+Creates a copy of this object and returns it.
+
+
+### .get_formated_text() -> str
+Returns the text of this Text()-object with the width and height set earlier.
+
+If the text is: "Some cool text, but longer and longer", the width is 10 and the height is 10, the formated text would look like this:
+```
+Some cool
+text, but
+longer and
+longer
+
+
+
+
+
+
+```
+
+
+### .get_height() -> int
+Returns the height of the text as integer.
+
+
+### .get_str() -> str
+This function does the same as `get_formated_text()`.
+
+This function exists, because the Overview()-class needs a `.get_str()`-function for it's widgets.
+
+
+### .get_text() -> str
+Returns the unformated text of this object.
+
+
+### .get_width() -> int
+Returns the width of the text as integer.
+
+
+### .print() -> None
+Prints the formated text to the terminal.
+
+
+### .set_height(height: int) -> None
+Sets the texts height to the value in `height`.
+
+
+### .set_optimal_height(optimal_height: bool = True) -> None
+Sets optimal height to True.
+
+This means that you don't need to enter a height manually and there are no newlines at the end of the text.
+
+
+### .set_text(text: str) -> None
+Sets the text of this object to the value in `text`.
+
+
+### .set_width(width: int) -> None
+Sets the texts width to the value in `width`.
+
+
+
+# Create an Widget Overview with PyGraph
+
+## Overview()-class
+
+### .add_widget(widget: Table | Rectangle | Line | Text, x: int, y: int) -> None
+Adds the widget in `widget` to the overview at the position (`x`, `y`).
+
+
+### .copy() -> Overview
+Creates a copy of this object and returns it.
+
+This functions doesn't copy the widgets in it.
+
+
+### .deepcopy() -> Overview
+Creates a copy of this object and of all widgets in it and returns it.
+
+
+### .delete_widget(widget: Table | Rectangle | Line | Text) -> Table | Rectangle | Line | Text
+Deletes the widget `widget` from the overview and returns it.
+
+If the widget doesn't exist in this overview, then a ValueError is raised.
+
+
+### .get_str() -> str
+Returns the overview as string.
+
+
+### .has_widget(widget: Table | Rectangle | Line | Text) -> bool
+Returns `True` if the widget `widget` is a widget of this overview, else False.
+
+
+### .print() -> None
+Prints the overview to the terminal.
 
 
 # Format Text with PyGraph
