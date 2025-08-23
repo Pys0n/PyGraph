@@ -607,6 +607,14 @@ class TableValues:
         return row
 
 
+    def __copy__(self) -> any:
+        return self.copy()
+    
+
+    def __deepcopy__(self) -> any:
+        return self.copy()
+
+
 class Table:
     '''
     Creates a new Table object.
@@ -1618,3 +1626,23 @@ class Table:
             row.append(self.values.get_text_from_cell(key, col))
 
         return row
+    
+
+    def __list__(self) -> list:
+        return self.get_list()
+    
+
+    def __tuple__(self) -> tuple:
+        return self.get_tuple()
+    
+
+    def __dict__(self) -> dict:
+        return self.get_dict()
+    
+
+    def __copy__(self) -> any:
+        return self.copy()
+    
+
+    def __deepcopy__(self) -> any:
+        return self.copy()

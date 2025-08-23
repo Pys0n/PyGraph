@@ -279,6 +279,14 @@ class Rectangle:
         return rectangle
     
 
+    def __copy__(self) -> any:
+        return self.copy()
+    
+
+    def __deepcopy__(self) -> any:
+        return self.copy()
+
+
 
 class Line:
     def __init__(self, startx: int, starty: int, endx: int, endy: int, *, symbol: str = '#') -> None:
@@ -449,3 +457,11 @@ class Line:
             line_str += ''.join(row) + '\n'
 
         return line_str[:len(line_str)-1]
+    
+
+    def __copy__(self) -> any:
+        return self.copy()
+    
+
+    def __deepcopy__(self) -> any:
+        return self.copy()

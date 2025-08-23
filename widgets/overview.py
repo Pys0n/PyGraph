@@ -128,3 +128,10 @@ class Overview:
 
         return overview_str
     
+
+    def __copy__(self) -> any:
+        return self.copy()
+    
+
+    def __deepcopy__(self) -> any:
+        return self.deepcopy()

@@ -240,3 +240,11 @@ class Text:
                 text_parts.append('')
 
         return '\n'.join(text_parts)
+    
+
+    def __copy__(self) -> any:
+        return self.copy()
+    
+
+    def __deepcopy__(self) -> any:
+        return self.copy()

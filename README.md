@@ -359,6 +359,14 @@ If the first columns are the same and the header rows are the same, an error get
 If the first columns aren't the same and the header rows aren't the same, an error gets raised. 
 
 
+### .__copy__() -> Table
+You can create a copy of this table with `copy.copy(your_table)`
+
+
+### .__deepcopy__() -> Table
+You can create a copy of this table with `copy.deepcopy(your_table)`
+
+
 ### .__getitem__(key: int) -> list
 You can use `your_table[0]` to get a list of the texts of the first row under the header row.
 
@@ -525,6 +533,14 @@ Swaps the row at the position `index1` with the row at the position `index2`.
 You can use `your_table_values[0]` to get a list of the texts of the first row under the header row.
 
 This means that you can use `your_table_values[3][5]` instead of `your_table_values.get_text_at_cell(3, 5)`
+
+
+### .__copy__() -> TableValues
+You can create a copy of those table values with `copy.copy(your_table_values)`
+
+
+### .__deepcopy__() -> TableValues
+You can create a copy of those table values with `copy.deepcopy(your_table_values)`
 
 
 ## BorderStyle()-class
@@ -849,6 +865,14 @@ Newlines in the string are ignored.
 Sets the width of the rectangle to the value in `width`.
 
 
+### .__copy__() -> Rectangle
+You can create a copy of this rectangle with `copy.copy(your_rectangle)`
+
+
+### .__deepcopy__() -> Rectangle
+You can create a copy of this rectangle with `copy.deepcopy(your_rectangle)`
+
+
 ## RectangleBorder()-class
 There are 13 default border styles:
 
@@ -976,6 +1000,14 @@ Sets the starting position of the line to (`startx`, `starty`).
 Sets the symbol of the line to the single character or symbol in `symbol`.
 
 
+### .__copy__() -> Line
+You can create a copy of this line with `copy.copy(your_line)`
+
+
+### .__deepcopy__() -> Line
+You can create a copy of this line with `copy.deepcopy(your_line)`
+
+
 # Create Texts with PyGraph
 
 ## Text()-class
@@ -1049,6 +1081,13 @@ Sets the text of this object to the value in `text`.
 Sets the texts width to the value in `width`.
 
 
+### .__copy__() -> Text
+You can create a copy of this text with `copy.copy(your_text)`
+
+
+### .__deepcopy__() -> Text
+You can create a copy of this text with `copy.deepcopy(your_text)`
+
 
 # Create an Widget Overview with PyGraph
 
@@ -1084,6 +1123,14 @@ Returns `True` if the widget `widget` is a widget of this overview, else False.
 
 ### .print() -> None
 Prints the overview to the terminal.
+
+
+### .__copy__() -> Overview
+You can create a copy of this overview with `copy.copy(your_overview)`
+
+
+### .__deepcopy__() -> Overview
+You can create a copy of this overview with `copy.deepcopy(your_overview)`
 
 
 # Format Text with PyGraph
