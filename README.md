@@ -348,7 +348,7 @@ Sorts all columns by the values in the column at the index `column_index`. The c
 Sorts all rows by the values in the row at the index `row_index`. The row is sorted by ascii, this means that the letters from A-Z are smaller than the letters from a-z. You can reverse the sorting if you set `reverse` to `True`. `reverse` is by default `False`.
 
 
-### .__add__(other: Table) -> Table
+### .\_\_add__(other: Table) -> Table
 You can append a table to another table with the operator `+`.
 
 If the first columns of the tables are the same, the table after the `+`-operator gets appended to the right side of the table before the `+`-operator.
@@ -359,21 +359,21 @@ If the first columns are the same and the header rows are the same, an error get
 If the first columns aren't the same and the header rows aren't the same, an error gets raised. 
 
 
-### .__copy__() -> Table
+### .\_\_copy__() -> Table
 You can create a copy of this table with `copy.copy(your_table)`
 
 
-### .__deepcopy__() -> Table
+### .\_\_deepcopy__() -> Table
 You can create a copy of this table with `copy.deepcopy(your_table)`
 
 
-### .__getitem__(key: int) -> list
+### .\_\_getitem__(key: int) -> list
 You can use `your_table[0]` to get a list of the texts of the first row under the header row.
 
 This means that you can use `your_table[3][5]` instead of `your_table.get_values().get_text_at_cell(3, 5)`
 
 
-### .__str__() -> str
+### .\_\_str__() -> str
 You can use `str(your_table)` to convert your table to a str.
 
 If you use `print(your_table)` the table gets printed to the terminal.
@@ -529,17 +529,17 @@ Swaps the column at the position `index1` with the column at the position `index
 Swaps the row at the position `index1` with the row at the position `index2`.
 
 
-### .__getitem__(key: int) -> list
+### .\_\_getitem__(key: int) -> list
 You can use `your_table_values[0]` to get a list of the texts of the first row under the header row.
 
 This means that you can use `your_table_values[3][5]` instead of `your_table_values.get_text_at_cell(3, 5)`
 
 
-### .__copy__() -> TableValues
+### .\_\_copy__() -> TableValues
 You can create a copy of those table values with `copy.copy(your_table_values)`
 
 
-### .__deepcopy__() -> TableValues
+### .\_\_deepcopy__() -> TableValues
 You can create a copy of those table values with `copy.deepcopy(your_table_values)`
 
 
@@ -865,11 +865,11 @@ Newlines in the string are ignored.
 Sets the width of the rectangle to the value in `width`.
 
 
-### .__copy__() -> Rectangle
+### .\_\_copy__() -> Rectangle
 You can create a copy of this rectangle with `copy.copy(your_rectangle)`
 
 
-### .__deepcopy__() -> Rectangle
+### .\_\_deepcopy__() -> Rectangle
 You can create a copy of this rectangle with `copy.deepcopy(your_rectangle)`
 
 
@@ -1000,11 +1000,11 @@ Sets the starting position of the line to (`startx`, `starty`).
 Sets the symbol of the line to the single character or symbol in `symbol`.
 
 
-### .__copy__() -> Line
+### .\_\_copy__() -> Line
 You can create a copy of this line with `copy.copy(your_line)`
 
 
-### .__deepcopy__() -> Line
+### .\_\_deepcopy__() -> Line
 You can create a copy of this line with `copy.deepcopy(your_line)`
 
 
@@ -1081,11 +1081,11 @@ Sets the text of this object to the value in `text`.
 Sets the texts width to the value in `width`.
 
 
-### .__copy__() -> Text
+### .\_\_copy__() -> Text
 You can create a copy of this text with `copy.copy(your_text)`
 
 
-### .__deepcopy__() -> Text
+### .\_\_deepcopy__() -> Text
 You can create a copy of this text with `copy.deepcopy(your_text)`
 
 
@@ -1125,11 +1125,11 @@ Returns `True` if the widget `widget` is a widget of this overview, else False.
 Prints the overview to the terminal.
 
 
-### .__copy__() -> Overview
+### .\_\_copy__() -> Overview
 You can create a copy of this overview with `copy.copy(your_overview)`
 
 
-### .__deepcopy__() -> Overview
+### .\_\_deepcopy__() -> Overview
 You can create a copy of this overview with `copy.deepcopy(your_overview)`
 
 
