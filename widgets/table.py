@@ -61,14 +61,14 @@ class TableStyle:
 
 
 class TableValues:
-    def __init__(self, header_row: list = [], first_column: list = []):
-        if not isinstance(header_row, list):
+    def __init__(self, header_row: list = None, first_column: list = None):
+        if header_row and not isinstance(header_row, list):
             raise TypeError('Excpected header_row to be a list, got '+type(header_row).__name__)
-        if not isinstance(first_column, list):
+        if first_column and not isinstance(first_column, list):
             raise TypeError('Excpected first_column to be a list, got '+type(first_column).__name__)
 
-        self.header_row: list[list[str, int, str]] = header_row
-        self.first_column: list[list[str, int, str]] = first_column
+        self.header_row: list[list[str, int, str]] = header_row if header_row else []
+        self.first_column: list[list[str, int, str]] = first_column if first_column else []
         self.values: dict[tuple[int, int], list[str, int, str]] = {}
 
         self.align = TextAlign.RIGHT
@@ -604,14 +604,14 @@ class Table:
     Creates a new Table object.
     '''
 
-    def __init__(self, title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = TableValues(), style: list[str] = [TableStyle.DEFAULT], borderstyle: tuple[str] = BorderStyle.LIGHT, default_cell_length: int = 6, hide_title: bool = False) -> None:
+    def __init__(self, title: str = '', columns: int = 0, rows: int = 0, *, values: TableValues = None, style: list[str] = [TableStyle.DEFAULT], borderstyle: tuple[str] = BorderStyle.LIGHT, default_cell_length: int = 6, hide_title: bool = False) -> None:
         if not isinstance(title, str):
             raise TypeError('Excpected title to be a str, got '+type(title).__name__)
         if not isinstance(columns, int):
             raise TypeError('Excpected columns to be an int, got '+type(columns).__name__)
         if not isinstance(rows, int):
             raise TypeError('Excpected rows to be an int, got '+type(rows).__name__)
-        if not isinstance(values, TableValues):
+        if not isinstance(values, TableValues) and values:
             raise TypeError('Excpected values to be TableValues, got '+type(values).__name__)
         if not isinstance(style, list):
             raise TypeError('Excpected style to be a list, got '+type(style).__name__)
@@ -629,7 +629,7 @@ class Table:
         self.title: str = title
         self.columns: int = columns
         self.rows: int = rows
-        self.values: TableValues = values
+        self.values: TableValues = values if values else TableValues()
         self.style: list[str] = style
         self.borderstyle: tuple[str] = borderstyle
         self.default_cell_length: int = default_cell_length
@@ -687,10 +687,8 @@ class Table:
             raise TypeError('Excpected values to be TableValues, got '+type(values).__name__)
         
         self.values = values
-        if self.rows != len(values.first_column):
-            self.rows = len(values.first_column)
-        if self.columns != len(values.header_row):
-            self.columns = len(values.header_row)
+        self.rows = len(values.first_column)
+        self.columns = len(values.header_row)
 
         self.sorted_row_indexes = [x for x in range(self.rows)]
         self.sorted_column_indexes = [x for x in range(self.columns)]
@@ -1494,14 +1492,14 @@ class Table:
                     if print_row//2 not in self.hidden_rows and x not in self.hidden_columns:
                         text = self.values.get_text_from_cell(print_row//2, x)
                         text = TextAlign.set_text_align(text, longest_row_length, self.values.get_align_from_cell(print_row//2, x))
-                        if TableStyle.WITHOUT_BORDER in self.style and x == 0:
+                        if TableStyle.WITHOUT_BORDER in self.style and not (x == 0 and TableStyle.WITHOUT_FIRST_COLUMN in self.style):
+                            table += self.borderstyle[1] + text
+                        elif TableStyle.WITHOUT_BORDER in self.style:
                             table += text
-                        elif TableStyle.WITHOUT_BORDER in self.style and x != 0:
-                            table += self.borderstyle[1] + text
-                        elif TableStyle.ONLY_BORDER in self.style and x == 0:
-                            table += self.borderstyle[1] + text
-                        else:
+                        elif TableStyle.ONLY_BORDER in self.style:
                             table += ' ' + text
+                        else:
+                            table += self.borderstyle[1] + text
 
                 if print_row//2 in self.hidden_rows:
                     pass
@@ -1527,3 +1525,80 @@ class Table:
         new_table.sum_row_columns = copy.deepcopy(self.sum_row_columns)
 
         return new_table
+
+
+    def append_table(self, table_to_add: any) -> any:
+        '''
+        Appends the table to this table and returns the new table.
+        '''
+        if not isinstance(table_to_add, Table):
+            raise TypeError('Excpected table_to_add to be an Table, got '+type(table_to_add).__name__)
+        
+        table: Table = self.copy()
+
+        if table_to_add.get_values().first_column == self.get_values().first_column:
+            for col in range(len(table_to_add.get_values().header_row)):
+                head = table_to_add.get_values().header_row[col][0]
+                rows = []
+                for row in range(len(table_to_add.get_values().first_column)):
+                    rows.append(table_to_add.get_values().get_text_from_cell(row, col))
+                
+                values = table.get_values()
+                values.add_column(head, rows)
+                table.set_values(values)
+        else:
+            raise ValueError('To append the table, the tables must have the same first column. Do you mean ".append_table_to_bottom()"?')
+
+        return table
+
+
+    def append_table_to_bottom(self, table_to_add: any) -> any:
+        '''
+        Appends the table to this table and returns the new table.
+        '''
+        if not isinstance(table_to_add, Table):
+            raise TypeError('Excpected table_to_add to be an Table, got '+type(table_to_add).__name__)
+        
+        table: Table = self.copy()
+
+        if table_to_add.get_values().header_row == self.get_values().header_row:
+            for row in range(len(table_to_add.get_values().first_column)):
+                first = table_to_add.get_values().first_column[row][0]
+                rows = []
+                for col in range(len(table_to_add.get_values().header_row)):
+                    rows.append(table_to_add.get_values().get_text_from_cell(row, col))
+                
+                values = table.get_values()
+                values.add_row(first, rows)
+                table.set_values(values)
+        else:
+            raise ValueError('To append the table to the bottom, the tables must have the same header row. Do you mean ".append_table()"?')
+
+        return table
+
+
+    def __add__(self, other: any) -> any:
+        '''
+        Adds the second table to the first.
+        '''
+        if not isinstance(other, Table):
+            raise TypeError('Excpected other to be an Table, got '+type(other).__name__)
+        
+        append = False
+        append_to_bottom = False
+
+        if other.get_values().first_column == self.get_values().first_column:
+            append = True
+        if other.get_values().header_row == self.get_values().header_row:
+            append_to_bottom = True
+
+        if append and append_to_bottom:
+            raise ValueError('Both tables have the same header row and the same first column. Use ".append_table()" or ".append_table_to_bottom()" instead.')
+        elif append == append_to_bottom:
+            raise ValueError('The tables don\'t have the same header row or the same first column.')
+        
+        if append:
+            return self.append_table(other)
+        elif append_to_bottom:
+            return self.append_table_to_bottom(other)
+            

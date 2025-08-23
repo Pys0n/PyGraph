@@ -24,6 +24,17 @@ The `Table()`-class has 8 optional arguments:
 
 `hide_title: bool` - Hides the title.
 
+### .append_table(table_to_add: Table) -> Table
+Adds the table in `table_to_add` to the right of this table.
+
+This function returns the fused table.
+
+
+### .append_table_to_bottom(table_to_add: Table) -> Table
+Adds the table in `table_to_add` to the bottom of this table.
+
+This function returns the fused table.
+
 
 ### .convert_to_html(filename: str = 'Table') -> None
 Converts your table to html source code in saves it in `filename`.html. If the file already exists the programm adds a number to the end. By default the filename "Table" is chosen.
@@ -335,6 +346,24 @@ Sorts all columns by the values in the column at the index `column_index`. The c
 
 ### .sort_by_row(row_index: int, reverse: bool = False) -> None
 Sorts all rows by the values in the row at the index `row_index`. The row is sorted by ascii, this means that the letters from A-Z are smaller than the letters from a-z. You can reverse the sorting if you set `reverse` to `True`. `reverse` is by default `False`.
+
+
+### .__add__(other: Table) -> Table
+You can append a table to another table with the operator `+`.
+
+If the first columns of the tables are the same, the table after the `+`-operator gets appended to the right side of the table before the `+`-operator.
+
+If the header rows of the tables are the same, the table after the `+`-operator gets appended to the bottom of the table before the `+`-operator.
+
+If the first columns are the same and the header rows are the same, an error gets raised. 
+If the first columns aren't the same and the header rows aren't the same, an error gets raised. 
+
+
+### .__str__() -> str
+You can use `str(your_table)` to convert your table to a str.
+
+If you use `print(your_table)` the table gets printed to the terminal.
+
 
 ## TableValues()-class
 The `TableValues()`-class contains the values of the table. You can set the values of the table to a `TableValues()`-object with `your_table.set_values(your_table_values)`.
