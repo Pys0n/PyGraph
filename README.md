@@ -359,6 +359,12 @@ If the first columns are the same and the header rows are the same, an error get
 If the first columns aren't the same and the header rows aren't the same, an error gets raised. 
 
 
+### .__getitem__(key: int) -> list
+You can use `your_table[0]` to get a list of the texts of the first row under the header row.
+
+This means that you can use `your_table[3][5]` instead of `your_table.get_values().get_text_at_cell(3, 5)`
+
+
 ### .__str__() -> str
 You can use `str(your_table)` to convert your table to a str.
 
@@ -513,6 +519,12 @@ Swaps the column at the position `index1` with the column at the position `index
 
 ### .swap_rows(index1: int, index2: int) -> None
 Swaps the row at the position `index1` with the row at the position `index2`.
+
+
+### .__getitem__(key: int) -> list
+You can use `your_table_values[0]` to get a list of the texts of the first row under the header row.
+
+This means that you can use `your_table_values[3][5]` instead of `your_table_values.get_text_at_cell(3, 5)`
 
 
 ## BorderStyle()-class
@@ -745,15 +757,6 @@ There are 6 table styles:
 
 
 ## BarChart()-class
-
-
-## Axis()-class
-
-
-## Position()-class
-
-
-## Direction()-class
 
 
 # Create Geometric Elements with PyGraph

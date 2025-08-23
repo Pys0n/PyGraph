@@ -598,6 +598,14 @@ class TableValues:
         return new_table_values
 
 
+    def __getitem__(self, key: int) -> str:
+        row = []
+
+        for col in range(len(self.first_column)):
+            row.append(self.get_text_from_cell(key, col))
+
+        return row
+
 
 class Table:
     '''
@@ -1602,3 +1610,11 @@ class Table:
         elif append_to_bottom:
             return self.append_table_to_bottom(other)
             
+
+    def __getitem__(self, key: int) -> str:
+        row = []
+
+        for col in range(len(self.values.first_column)):
+            row.append(self.values.get_text_from_cell(key, col))
+
+        return row
