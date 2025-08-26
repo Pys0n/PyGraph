@@ -185,6 +185,10 @@ The border style you can change with `.set_border_style()` and a border style fr
 The general style of the table you can change with `.set_style()` and a table style from `TableStyle()`.
 
 
+### .get_title() -> str
+Returns the title of this table.
+
+
 ### .get_tuple() -> tuple
 Returns the table values as tuple, with the format like in `.create_from_tuple()`:
 ```python

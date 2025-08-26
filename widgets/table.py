@@ -926,6 +926,13 @@ class Table:
         self.sum_row = False
 
 
+    def get_title(self) -> str:
+        '''
+        Returns the title of the table
+        '''
+        return self.title
+
+
     def get_values(self) -> TableValues:
         '''
         Returns the tables values
