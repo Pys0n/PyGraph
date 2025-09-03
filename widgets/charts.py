@@ -90,7 +90,7 @@ class Chart:
     
 
 
-class BarChart(Chart):
+class VBarChart(Chart):
     def __init__(self, name: str, x_axis: list, y_axis: list, bar_width: int = 1, *, values: dict = {}) -> None:
         super().__init__(name, x_axis, y_axis, values)
         self.bar_width: int = bar_width
