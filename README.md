@@ -775,8 +775,164 @@ There are 6 table styles:
 
 # Create Charts with PyGraph
 
+## Chart()-class
+**INFO**: You can ignore this class or use it to create your own Charts, because this class contains the structure and base functions of a chart. 
 
-## BarChart()-class
+The `Chart()`-class takes four positional arguments.
+
+`name: str` - the name of the chart as string
+`x_axis: list` - the x axis of the chart as list
+`y_axis: list` - the y axis of the chart as list
+`values: dict` - the values of the chart as dict
+
+
+### .get_name() -> str
+Returns the name of the chart.
+
+
+### .get_values() -> dict
+Returns the values of the chart.
+
+
+### .get_x_axis() -> list
+Returns the x axis of the chart.
+
+
+### .get_y_axis() -> list
+Returns the y axis of the chart.
+
+
+### .set_name(name: str) -> None
+Sets the name of the chart to the value in `name`.
+
+
+### .set_values(values: dict) -> None
+Sets the values of the chart to the value in `values`.
+
+
+### .set_x_axis(x_axis: list) -> None
+Sets the x axis of the chart to the value in `x_axis`.
+
+
+### .set_y_axis(y_axis: list) -> None
+Sets the y axis of the chart to the value in `y_axis`.
+
+
+## VBarChart()-class
+The `VBarChart()`-class 5 optional arguments:
+
+`name: str = '', x_axis: list = [], y_axis: list = [], bar_width: int = 1, *, values: dict = {}`
+
+`name: str = ''` - The name of the chart
+
+`x_axis: list = []` - the x axis of the chart
+
+`y_axis: list = []` - the y axis of the chart
+
+`bar_width: int = 1` - the width of the bars
+
+`values: dict = {}` - the values of the chart
+
+
+
+### .add_bar(x: str | int, y: str | int) -> None
+Adds a bar at the position `x` which goes up to `y`.
+
+
+### .copy() -> VBarChart
+Returns a copy of this chart
+
+
+### .delete_bar(x: str | int) -> None
+Deletes the bar at the position `x`.
+
+
+### .get_bar_width() -> int
+Returns the width of the bars.
+
+
+### .get_name() -> str
+Returns the name of the chart.
+
+
+### .get_str() -> str
+Returns this chart as string
+
+
+### .get_values() -> dict
+Returns the values of the chart.
+
+
+### .get_x_axis() -> list
+Returns the x axis of the chart.
+
+
+### .get_y_axis() -> list
+Returns the y axis of the chart.
+
+
+### .print() -> None
+Prints the chart to the terminal
+
+
+### .set_all_bar_colors(bar_color: str) -> None
+Sets the colors of all bars to the color in `bar_color`.
+
+**INFO**: Only sets the color of currently existing bars.
+
+
+### .set_bar_color(x: str | int, bar_color: str) -> None
+Sets the color of the bar at the position `x` to the color in `bar_color`.
+
+
+### .set_bar_width(width: int) -> None
+Sets the width of the bars to the value in `width`.
+
+
+### .set_name(name: str) -> None
+Sets the name of the chart to the value in `name`.
+
+
+### .set_values(values: dict) -> None
+Sets the values of the chart to the value in `values`.
+
+
+### .set_x_axis(x_axis: list) -> None
+Sets the x axis of the chart to the value in `x_axis`.
+
+
+### .set_y_axis(y_axis: list) -> None
+Sets the y axis of the chart to the value in `y_axis`.
+
+
+### .\_\_copy__() -> VBarChart
+Returns a copy of this chart
+
+
+### .\_\_deepcopy__() -> VBarChart
+Returns a deepcopy of this chart
+
+
+### .\_\_getitem__(x: str | int) -> y: str | int
+Returns the bar at the postion `x`.
+
+**INFO**:
+```python
+y = your_chart[x]
+```
+
+
+### .\_\_setitem__(x: str | int, y: str | int) -> None
+Adds a bar at the position `x` which goes up to `y`.
+
+**INFO**:
+```python
+your_chart[x] = y
+```
+
+
+### .\_\_str__() -> str
+Returns this chart as string
 
 
 # Create Geometric Elements with PyGraph
@@ -1500,8 +1656,6 @@ Enter a field (1-9): 9
  O │   │ X 
 ```
 
-
-## 
 
 
 

@@ -101,13 +101,22 @@ class Chart:
 
 
 class VBarChart(Chart):
-    def __init__(self, name: str = '', x_axis: list = None, y_axis: list = None, bar_width: int = 1, *, values: dict = {}) -> None:
+    def __init__(self, name: str = '', x_axis: list = None, y_axis: list = None, bar_width: int = 1, *, values: dict = None) -> None:
         if x_axis == None:
             x_axis = []
             self._numeric_x_axis = True
+        else:
+            self.set_x_axis(x_axis)
         if y_axis == None:
             y_axis = []
             self._numeric_y_axis = True
+        else:
+            self.set_y_axis(y_axis)
+        if values == None:
+            values = {}
+        else:
+            self.set_values(values)
+
         super().__init__(name, x_axis, y_axis, values)
         self.bar_width: int = bar_width
     
@@ -240,7 +249,7 @@ class VBarChart(Chart):
         '''
         Returns a copy of this chart
         '''
-        chart = VBarChart(self.name, deepcopy(self.x_axis), deepcopy(self.y_axis), self.bar_width, values=deepcopy(self.values))
+        chart = VBarChart(self.name, deepcopy(self.get_x_axis()), deepcopy(self.get_y_axis()), self.bar_width, values=deepcopy(self.get_values()))
         chart._numeric_x_axis = self._numeric_x_axis
         chart._numeric_y_axis = self._numeric_y_axis
 
@@ -357,9 +366,4 @@ class VBarChart(Chart):
     
 
     def __setitem__(self, x: str | int, y: str | int) -> None:
-        if x not in self.x_axis and not self._numeric_x_axis:
-            raise ValueError('The charts x axis has no item named "'+str(x)+'"')
-        if y not in self.y_axis and not self._numeric_y_axis and y != 0:
-            raise ValueError('The charts y axis has no item named "'+str(y)+'"')
-        
-        self.values[x] = [y, BarColor.WHITE]
+        self.add_bar(x, y)
