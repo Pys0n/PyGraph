@@ -1,7 +1,7 @@
-from widgets.text import ColoredBackground
+from widgets.text import ColoredText
 
 
-BarColor = ColoredBackground
+BarColor = ColoredText
 
 
 class Chart:
@@ -91,7 +91,13 @@ class Chart:
 
 
 class VBarChart(Chart):
-    def __init__(self, name: str, x_axis: list, y_axis: list, bar_width: int = 1, *, values: dict = {}) -> None:
+    def __init__(self, name: str = '', x_axis: list = None, y_axis: list = None, bar_width: int = 1, *, values: dict = {}) -> None:
+        if x_axis == None:
+            x_axis = []
+            self._numeric_x_axis = True
+        if y_axis == None:
+            y_axis = []
+            self._numeric_y_axis = True
         super().__init__(name, x_axis, y_axis, values)
         self.bar_width: int = bar_width
     
@@ -102,9 +108,9 @@ class VBarChart(Chart):
 
         x and y must be items of x_axis and y_axis
         '''
-        if x not in self.x_axis:
+        if x not in self.x_axis and not self._numeric_x_axis:
             raise ValueError('The charts x axis has no item named "'+str(x)+'"')
-        if y not in self.y_axis:
+        if y not in self.y_axis and not self._numeric_y_axis and y != 0:
             raise ValueError('The charts y axis has no item named "'+str(y)+'"')
         
         self.values[x] = [y, BarColor.WHITE]
@@ -159,12 +165,48 @@ class VBarChart(Chart):
         self.bar_width = width
 
 
+    def set_x_axis(self, x_axis: list) -> None:
+        '''
+        Sets the x axis of the chart
+        '''
+        self._numeric_x_axis = False
+        super().set_x_axis(x_axis)
+
+
+    def set_y_axis(self, y_axis: list) -> None:
+        '''
+        Sets the y axis of the chart
+        '''
+        self._numeric_y_axis = False
+        super().set_y_axis(y_axis)
+
+
     def get_bar_width(self) -> int:
         '''
         Returns the width of all bars
         '''
         return self.bar_width
     
+
+    def get_x_axis(self) -> list:
+        '''
+        Returns the x axis of the chart
+        '''
+
+        if self._numeric_x_axis: self._load_numeric_x_axis()
+
+        return self.x_axis
+
+
+    def get_y_axis(self) -> list:
+        '''
+        Returns the y axis of the chart
+        '''
+
+        if self._numeric_y_axis: self._load_numeric_y_axis()
+
+        return self.y_axis
+
 
     def print(self) -> None:
         '''
@@ -178,10 +220,35 @@ class VBarChart(Chart):
         Returns the graph as string
         '''
         return str(self)
+    
+    
+    def _load_numeric_x_axis(self):
+        max_x = 0
+        for x in self.values:
+            if x > max_x:
+                max_x = x
+
+        self.x_axis = []
+        for i in range(1, max_x + 1):
+            self.x_axis.append(i)
+
+
+    def _load_numeric_y_axis(self):
+        max_y = 0
+        for y in self.values.values():
+            if y[0] > max_y:
+                max_y = y[0]
+
+        self.y_axis = []
+        for i in range(1, max_y + 1):
+            self.y_axis.append(i)
 
 
     def __str__(self) -> str:
         graph = []
+
+        if self._numeric_x_axis: self._load_numeric_x_axis()
+        if self._numeric_y_axis: self._load_numeric_y_axis()
 
         self.y_axis.reverse()
         y_axis = self.y_axis.copy()
@@ -200,7 +267,7 @@ class VBarChart(Chart):
             for key in self.values:
                 if str(self.values[key][0]) == str(item) or key in print_bars:
                     print_bars.add(key)
-                    line += str('#'*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4))
+                    line += self.values[key][1] + str('█'*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4)) + BarColor.END
                 else:
                     line += str(' '*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4))
 
@@ -212,7 +279,7 @@ class VBarChart(Chart):
                 for key in self.values:
                     if str(self.values[key][0]) == str(item) or key in print_bars:
                         print_bars.add(key)
-                        line += str('#'*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4))
+                        line += self.values[key][1] + str('█'*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4)) + BarColor.END
                     else:
                         line += str(' '*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4))
                 graph.append(line + '\n')
