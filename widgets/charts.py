@@ -1,3 +1,4 @@
+from copy import deepcopy
 from widgets.text import ColoredText
 
 
@@ -58,6 +59,10 @@ class Chart:
         if not isinstance(values, dict):
             raise TypeError('Excpected values to be a dict, got '+type(values).__name__)
         
+        new_values = {}
+        for key in values:
+            new_values[key] = [values[key], BarColor.WHITE]
+
         self.values = values
 
 
@@ -86,6 +91,11 @@ class Chart:
         '''
         Returns the values of the chart
         '''
+
+        values = {}
+        for key in self.values:
+            values[key] = self.values[key][0]
+
         return self.values
     
 
@@ -102,7 +112,7 @@ class VBarChart(Chart):
         self.bar_width: int = bar_width
     
 
-    def add_bar(self, x, y) -> None:
+    def add_bar(self, x: str | int, y: str | int) -> None:
         '''
         Adds a bar that starts at x and goes up to y
 
@@ -116,7 +126,7 @@ class VBarChart(Chart):
         self.values[x] = [y, BarColor.WHITE]
 
 
-    def delete_bar(self, x) -> None:
+    def delete_bar(self, x: str | int) -> None:
         '''
         Deletes the bar at the position x
 
@@ -141,7 +151,7 @@ class VBarChart(Chart):
             self.values[key][1] = bar_color
 
     
-    def set_bar_color(self, x, bar_color: str) -> None:
+    def set_bar_color(self, x: str | int, bar_color: str) -> None:
         '''
         Sets the color of the bar at position x
         '''
@@ -170,7 +180,12 @@ class VBarChart(Chart):
         Sets the x axis of the chart
         '''
         self._numeric_x_axis = False
-        super().set_x_axis(x_axis)
+
+        new_x_axis = []
+        for item in x_axis:
+            new_x_axis.append(item, BarColor.WHITE)
+
+        super().set_x_axis(new_x_axis)
 
 
     def set_y_axis(self, y_axis: list) -> None:
@@ -178,7 +193,12 @@ class VBarChart(Chart):
         Sets the y axis of the chart
         '''
         self._numeric_y_axis = False
-        super().set_y_axis(y_axis)
+
+        new_y_axis = []
+        for item in y_axis:
+            new_y_axis.append(item, BarColor.WHITE)
+
+        super().set_y_axis(new_y_axis)
 
 
     def get_bar_width(self) -> int:
@@ -195,7 +215,11 @@ class VBarChart(Chart):
 
         if self._numeric_x_axis: self._load_numeric_x_axis()
 
-        return self.x_axis
+        x_axis = []
+        for item in self.x_axis:
+            x_axis.append(item[0])
+
+        return x_axis
 
 
     def get_y_axis(self) -> list:
@@ -205,7 +229,22 @@ class VBarChart(Chart):
 
         if self._numeric_y_axis: self._load_numeric_y_axis()
 
-        return self.y_axis
+        y_axis = []
+        for item in self.y_axis:
+            y_axis.append(item[0])
+
+        return y_axis
+    
+
+    def copy(self) -> any:
+        '''
+        Returns a copy of this chart
+        '''
+        chart = VBarChart(self.name, deepcopy(self.x_axis), deepcopy(self.y_axis), self.bar_width, values=deepcopy(self.values))
+        chart._numeric_x_axis = self._numeric_x_axis
+        chart._numeric_y_axis = self._numeric_y_axis
+
+        return chart
 
 
     def print(self) -> None:
@@ -300,3 +339,27 @@ class VBarChart(Chart):
         graph.append(x_text + '\n')
 
         return ''.join(graph)
+    
+
+    def __copy__(self) -> any:
+        return self.copy()
+    
+
+    def __deepcopy__(self) -> any:
+        return self.copy()
+    
+
+    def __getitem__(self, x: str | int) -> str | int:
+        if x not in self.x_axis and not self._numeric_x_axis:
+            raise ValueError('The charts x axis has no item named "'+str(x)+'"')
+
+        return self.values[x][0]
+    
+
+    def __setitem__(self, x: str | int, y: str | int) -> None:
+        if x not in self.x_axis and not self._numeric_x_axis:
+            raise ValueError('The charts x axis has no item named "'+str(x)+'"')
+        if y not in self.y_axis and not self._numeric_y_axis and y != 0:
+            raise ValueError('The charts y axis has no item named "'+str(y)+'"')
+        
+        self.values[x] = [y, BarColor.WHITE]
