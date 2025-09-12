@@ -272,23 +272,29 @@ class VBarChart(Chart):
     
     def _load_numeric_x_axis(self):
         max_x = 0
+        min_x = 0
         for x in self.values:
             if x > max_x:
                 max_x = x
+            if x < min_x:
+                min_x = x
 
         self.x_axis = []
-        for i in range(1, max_x + 1):
+        for i in range(min_x, max_x + 1):
             self.x_axis.append(i)
 
 
     def _load_numeric_y_axis(self):
         max_y = 0
+        min_y = 0
         for y in self.values.values():
             if y[0] > max_y:
                 max_y = y[0]
+            if y[0] < min_y:
+                min_y = y[0]
 
         self.y_axis = []
-        for i in range(1, max_y + 1):
+        for i in range(min_y, max_y + 1):
             self.y_axis.append(i)
 
 
@@ -310,6 +316,7 @@ class VBarChart(Chart):
         graph.append(' ' * space_before_graph + '  │\n')
         print_bars = set()
         for item in y_axis:
+            if item <= 0: break
             line = ' ' + str(item).rjust(space_before_graph) + ' ┼ '
 
             for key in self.values:
@@ -332,20 +339,54 @@ class VBarChart(Chart):
                         line += str(' '*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4))
                 graph.append(line + '\n')
 
-        x = ' ' * (space_before_graph+2) + '└─'
+        x = ' ' * (space_before_graph+2) + ('└─' if min(self.values.values())[0] >= 0 else '├─')
 
         for item in self.x_axis:
+            if item == 0: continue
             item_len = len(str(item))//2
             x += '┼'.center((item_len if item_len > self.bar_width*4-2 else 0)+(self.bar_width*4), '─')
 
         graph.append(x + '\n')
 
-        x_text = ' ' * (space_before_graph+4)
+        if min(self.values.values())[0] >= 0:
+            x_text = ' ' * (space_before_graph+4)
+        else:
+            x_text = ' ' * (space_before_graph+2) + '│ '
 
         for item in self.x_axis:
+            if item == 0: continue
             x_text += str(item).center((len(str(item))//2 if len(str(item))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4), ' ')
 
         graph.append(x_text + '\n')
+
+        skip_first = True
+        if self._numeric_y_axis and min(self.values.values())[0] < 0:
+            for item in y_axis:
+                if item >= 0: continue
+
+                for _ in range(self.bar_width):
+                    if skip_first:
+                        skip_first = False
+                        continue
+                    line = ' ' * space_before_graph + '  │ '
+                    for key in self.values:
+                        if self.values[key][0]-1 < item or key not in print_bars:
+                            line += self.values[key][1] + str('█'*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4)) + BarColor.END
+                        else:
+                            line += str(' '*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4))
+                    graph.append(line + '\n')
+
+                
+                line = ' ' + str(item).rjust(space_before_graph) + ' ┼ '
+
+                for key in self.values:
+                    if self.values[key][0]-1 < item or key not in print_bars:
+                        print_bars.add(key)
+                        line += self.values[key][1] + str('█'*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4)) + BarColor.END
+                    else:
+                        line += str(' '*self.bar_width).center((len(str(key))//2 if len(str(key))//2 > self.bar_width*4-2 else 0)+(self.bar_width*4))
+                graph.append(line+'\n')
+
 
         return ''.join(graph)
     
