@@ -359,6 +359,10 @@ class VBarChart(Chart):
 
         graph.append(x_text + '\n')
 
+        for key in self.values:
+            if self.values[key][0] == 0:
+                print_bars.add(key)
+
         skip_first = True
         if self._numeric_y_axis and min(self.values.values())[0] < 0:
             for item in y_axis:
